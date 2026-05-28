@@ -4,6 +4,10 @@ Hades Blackwatch is an integrated Codex skill for AI application security review
 
 The name evokes Hades and a Blackwatch posture: severe boundary control, deep visibility, and relentless scrutiny over anything crossing from prompt, tool, scanner, model, MCP, or code into trusted execution.
 
+<p align="center">
+  <img src="assets/logo.png" alt="Hades Blackwatch Logo" width="420">
+</p>
+
 ## Documentation Page
 
 A complete static HTML documentation page is available at:
