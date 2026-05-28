@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI AppSec Security Review</title>
+  <style>
+    :root {
+      --ink: #101828;
+      --muted: #667085;
+      --soft: #f8fafc;
+      --panel: #ffffff;
+      --line: #d9dee8;
+      --blue: #1d4ed8;
+      --blue-dark: #101828;
+      --teal: #0f766e;
+      --critical: #991b1b;
+      --critical-soft: #fee2e2;
+      --high: #b45309;
+      --high-soft: #fef3c7;
+      --medium: #a16207;
+      --medium-soft: #fef3c7;
+      --low: #047857;
+      --low-soft: #d1fae5;
+      --informational: #475569;
+      --informational-soft: #e2e8f0;
+      --shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: #eef2f7; font: 14px/1.6 Arial, Helvetica, sans-serif; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .layout { display: grid; grid-template-columns: 292px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 26px 20px; background: var(--blue-dark); color: #e5e7eb; }
+    .mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #0f766e); color: #fff; font-weight: 800; margin-bottom: 12px; }
+    .sidebar h1 { margin: 0; font-size: 22px; }
+    .sidebar p { color: #aab3c2; margin: 6px 0 22px; }
+    .nav-title { margin: 22px 0 8px; color: #aab3c2; text-transform: uppercase; font-size: 12px; letter-spacing: 0.04em; }
+    .risk-link { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 8px; align-items: start; padding: 10px; border-radius: 8px; color: #e5e7eb; border: 1px solid transparent; }
+    .risk-link:hover { background: #1d2939; text-decoration: none; border-color: #344054; }
+    .risk-link span { color: #aab3c2; font-size: 12px; }
+    .risk-link strong { font-size: 13px; line-height: 1.35; }
+    .risk-link .badge { grid-column: 2; width: fit-content; }
+    .section-nav { display: grid; gap: 6px; }
+    .quick-link { color: #dbeafe; padding: 7px 10px; border-radius: 8px; font-size: 13px; }
+    .quick-link:hover { background: #1d2939; text-decoration: none; }
+    .content { min-width: 0; }
+    .hero { padding: 44px 56px 34px; color: #fff; background: radial-gradient(circle at top right, rgba(15,118,110,0.55), transparent 32%), linear-gradient(135deg, #111827, #172554 62%, #0f766e); }
+    .hero-inner { max-width: 1180px; margin: 0 auto; }
+    .eyebrow { margin: 0 0 10px; color: #bfdbfe; text-transform: uppercase; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; }
+    .hero h2 { margin: 0; max-width: 920px; font-size: 38px; line-height: 1.12; }
+    .hero p { max-width: 900px; color: #dbeafe; font-size: 17px; }
+    .hero-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+    .hero-meta div { border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.09); border-radius: 8px; padding: 12px; }
+    .hero-meta span { display: block; color: #bfdbfe; font-size: 12px; text-transform: uppercase; }
+    .hero-meta strong { display: block; margin-top: 4px; font-size: 14px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 32px 56px 72px; }
+    section { scroll-margin-top: 24px; }
+    h2 { font-size: 25px; margin: 34px 0 14px; }
+    h3 { font-size: 20px; margin: 0; }
+    h4 { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 18px 0 6px; }
+    p { margin: 7px 0 12px; }
+    ul { margin: 8px 0 14px; padding-left: 20px; }
+    pre { margin: 8px 0 14px; white-space: pre-wrap; overflow-wrap: anywhere; background: #111827; color: #e5e7eb; border-radius: 8px; padding: 14px; font-size: 12px; line-height: 1.55; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 28px; background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 8px 24px rgba(15,23,42,0.04); }
+    th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef2f7; color: #344054; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:last-child td { border-bottom: 0; }
+    .summary { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr); gap: 18px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; box-shadow: var(--shadow); }
+    .insight-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 14px 0 24px; }
+    .insight-card, .recommendation-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 8px 24px rgba(15,23,42,0.04); }
+    .insight-card.threat { border-left: 5px solid var(--teal); }
+    .insight-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+    .insight-head h3 { font-size: 17px; }
+    .status-pill, .tag, .priority { display: inline-flex; align-items: center; min-height: 24px; border-radius: 999px; padding: 3px 9px; background: #eef2ff; color: #1e3a8a; font-size: 12px; font-weight: 800; }
+    .priority { background: #ecfdf5; color: #065f46; }
+    .tag-list, .meta-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .source-list a { font-weight: 800; }
+    .recommendation-grid { display: grid; gap: 14px; margin: 14px 0 26px; }
+    .recommendation-card { border-left: 5px solid var(--blue); }
+    .recommendation-card h3 { margin-top: 10px; font-size: 17px; line-height: 1.35; }
+    .score-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .score-card { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--informational); border-radius: 8px; padding: 14px; }
+    .score-card span { display: block; color: var(--muted); }
+    .score-card strong { display: block; font-size: 30px; line-height: 1; margin-top: 8px; }
+    .score-card.critical { border-top-color: var(--critical); }
+    .score-card.high { border-top-color: var(--high); }
+    .score-card.medium { border-top-color: var(--medium); }
+    .score-card.low { border-top-color: var(--low); }
+    .mini-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .mini-grid section, .finding-body section { background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+    .finding { background: #fff; border: 1px solid var(--line); border-left: 7px solid var(--informational); border-radius: 8px; padding: 18px; margin: 18px 0 28px; box-shadow: var(--shadow); }
+    .finding.critical { border-left-color: var(--critical); }
+    .finding.high { border-left-color: var(--high); }
+    .finding.medium { border-left-color: var(--medium); }
+    .finding.low { border-left-color: var(--low); }
+    .finding-head { display: flex; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    .finding-badges { text-align: right; min-width: 190px; }
+    .finding-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+    .finding-body .wide { grid-column: 1 / -1; }
+    .finding-body .fix { background: #ecfdf5; border-color: #a7f3d0; }
+    .finding-body .threat-note { background: #f0fdfa; border-color: #99f6e4; }
+    .finding-body .attack-visual { background: #fff7ed; border-color: #fed7aa; }
+    .flow-diagram { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 14px 0; counter-reset: flow; }
+    .flow-step { position: relative; min-height: 190px; border: 1px solid #fed7aa; border-radius: 8px; background: #fffaf5; padding: 13px; }
+    .flow-step::after { content: ""; position: absolute; top: 28px; right: -10px; width: 10px; height: 2px; background: #f97316; }
+    .flow-step:last-child::after { display: none; }
+    .flow-step strong { display: block; margin: 7px 0 5px; color: #9a3412; }
+    .flow-step p { font-size: 13px; line-height: 1.45; }
+    .step-number { display: inline-grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: #f97316; color: #fff; font-size: 12px; font-weight: 800; }
+    .tag.danger { background: #fef2f2; color: #991b1b; }
+    .safe-note { color: #7c2d12; font-weight: 700; }
+    .badge { display: inline-flex; align-items: center; min-height: 24px; border-radius: 999px; padding: 3px 9px; color: #fff; background: var(--informational); font-size: 12px; font-weight: 800; }
+    .badge.critical { background: var(--critical); }
+    .badge.high { background: var(--high); }
+    .badge.medium { background: var(--medium); }
+    .badge.low { background: var(--low); }
+    .badge.informational { background: var(--informational); }
+    .badge.confidence { background: #344054; margin-left: 4px; }
+    .kicker { color: var(--muted); text-transform: uppercase; font-size: 12px; margin: 0 0 5px; font-weight: 700; }
+    .empty { color: var(--muted); font-style: italic; }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .hero, main { padding-left: 24px; padding-right: 24px; }
+      .hero-meta, .score-grid, .summary, .mini-grid, .finding-body, .insight-grid, .flow-diagram { grid-template-columns: 1fr; }
+      .finding-body .wide { grid-column: auto; }
+      .flow-step::after { display: none; }
+    }
+    @media print {
+      body { background: #fff; }
+      .layout { display: block; }
+      .sidebar { display: none; }
+      .hero { color: #111827; background: #fff; border-bottom: 1px solid var(--line); }
+      .hero p, .eyebrow { color: #475569; }
+      main, .hero { padding: 24px 32px; }
+      .panel, .finding, table { box-shadow: none; }
+      .finding { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="mark">HB</div>
+      <h1>Hades Blackwatch</h1>
+      <p>Security review report</p>
+      <div class="nav-title">Sections</div>
+      <nav class="section-nav">
+        <a class="quick-link" href="#summary">Executive summary</a>
+        <a class="quick-link" href="#scope">Scope</a>
+        <a class="quick-link" href="#methodology">Methodology</a>
+        <a class="quick-link" href="#skills">Skill coverage</a>
+        <a class="quick-link" href="#threat-intel">Threat intel</a>
+        <a class="quick-link" href="#recommendations">Recommendations</a>
+        <a class="quick-link" href="#findings">Detailed findings</a>
+        <a class="quick-link" href="#roadmap">Roadmap</a>
+      </nav>
+      <div class="nav-title">Top Risks</div>
+      <a class="risk-link" href="#f-ssrf-001"><span>F-SSRF-001</span><strong>Agent web fetch tool can receive model-controlled URLs</strong><span class="badge high">High</span></a>
+    </aside>
+    <div class="content">
+      <header class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">Internal - Version 0.1.0</p>
+          <h2>AI AppSec Security Review</h2>
+          <p>Request changes: high-risk issues require remediation before approval.</p>
+          <div class="hero-meta">
+            <div><span>Target</span><strong>Example AI Agent Platform</strong></div>
+            <div><span>Date</span><strong>2026-05-12</strong></div>
+            <div><span>Author</span><strong>AI AppSec Reviewer</strong></div>
+            <div><span>Risk Posture</span><strong>Moderate</strong></div>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="summary" id="summary">
+          <div class="panel">
+            <h2>Executive Summary</h2>
+            <p><strong>Verdict:</strong> Request changes: high-risk issues require remediation before approval.</p>
+            <p><strong>Risk posture:</strong> Moderate based on 1 normalized finding(s).</p>
+          </div>
+          <div class="panel">
+            <h2>Severity</h2>
+            <div class="score-grid">
+        <div class="score-card critical">
+          <span>Critical</span>
+          <strong>0</strong>
+        </div>
+        
+        <div class="score-card high">
+          <span>High</span>
+          <strong>1</strong>
+        </div>
+        
+        <div class="score-card medium">
+          <span>Medium</span>
+          <strong>0</strong>
+        </div>
+        
+        <div class="score-card low">
+          <span>Low</span>
+          <strong>0</strong>
+        </div>
+        
+        <div class="score-card informational">
+          <span>Informational</span>
+          <strong>0</strong>
+        </div>
+        </div>
+          </div>
+        </section>
+
+        <section id="scope">
+          <h2>Scope and Authorization</h2>
+          <div class="mini-grid">
+            <section><h4>Environment</h4><p>local/staging</p></section>
+            <section><h4>Access Level</h4><p>source + imported scanner evidence</p></section>
+            <section><h4>Authorized</h4><p>True</p></section>
+            <section><h4>Excluded</h4><ul><li>Production active scanning</li><li>Credentialed cloud posture review</li></ul></section>
+          </div>
+          <div class="panel"><h4>Included</h4><ul><li>LLM prompt flow</li><li>MCP tool manifest</li><li>Agent web fetch tool</li><li>Scanner finding import</li></ul></div>
+        </section>
+
+        <section id="methodology">
+          <h2>Methodology</h2>
+          <div class="mini-grid">
+            <section><h4>Frameworks</h4><ul><li>OWASP LLM Top 10</li><li>OWASP Agentic Top 10</li><li>OWASP AIVSS</li><li>MITRE ATLAS</li><li>NIST AI RMF GenAI Profile</li></ul></section>
+            <section><h4>Agents Used</h4><ul><li>Security Orchestrator</li><li>Latest Threat Intel</li><li>MCP Server Auditor</li><li>Secure Code Review</li><li>Finding Correlator</li><li>Report</li></ul></section>
+            <section><h4>Evidence Sources</h4><ul><li>SonarQube imported evidence</li></ul></section>
+            <section><h4>MCP Policy</h4><p>Escalation-only; local evidence and imported reports were preferred.</p></section>
+          </div>
+        </section>
+
+        <section id="skills">
+          <h2>Skill Coverage and Specialist Notes</h2>
+          <p>This review used a focused subset of specialists because the input combined source review with imported scanner evidence.</p><div class="insight-grid">
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Security Orchestrator</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Scope, authorization, severity, and final verdict</p>
+              <h4>Coverage</h4>
+              <p>Confirmed local/staging scope and avoided live scanner or MCP actions.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Latest Threat Intel Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Per-finding threat context and source freshness</p>
+              <h4>Coverage</h4>
+              <p>Added source-linked threat intel for the SSRF/tool-abuse finding.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>MCP Server Auditor</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Tool boundary and least-privilege review</p>
+              <h4>Coverage</h4>
+              <p>Reviewed the agent fetch tool as an MCP-adjacent privileged action.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Report Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Detailed HTML/PDF deliverable</p>
+              <h4>Coverage</h4>
+              <p>Converted the normalized finding into a findings-first report with fixes and tests.</p>
+              
+            </article>
+            </div>
+        </section>
+
+        <section id="threat-intel">
+          <h2>Threat Intelligence</h2>
+          <p class="kicker">As of 2026-05-28</p><p>The current threat context for agentic systems emphasizes prompt injection reaching tools, excessive agency, MCP authorization boundaries, SSRF controls, and traceable governance evidence.</p><div class="insight-grid">
+            <article class="insight-card threat">
+              <h3>Prompt injection to privileged tools</h3>
+              <h4>Why It Matters</h4>
+              <p>OWASP LLM 2025 keeps prompt injection and excessive agency in scope for GenAI apps, and the reviewed issue allows model-influenced URLs to reach a network-capable tool.</p>
+              <h4>Recommended Action</h4>
+              <p>Enforce deterministic URL validation, egress controls, approval gates, and logging outside the model.</p>
+              <p class="tag-list"><span class="tag">Linked: F-SSRF-001</span></p>
+            </article>
+            
+            <article class="insight-card threat">
+              <h3>MCP SSRF and token boundary risk</h3>
+              <h4>Why It Matters</h4>
+              <p>MCP security guidance calls out SSRF, token passthrough, scope minimization, and authorization validation as key implementation risks.</p>
+              <h4>Recommended Action</h4>
+              <p>Bind tokens to intended audiences, avoid token passthrough, minimize scopes, and block private or reserved IP ranges before outbound requests.</p>
+              <p class="tag-list"><span class="tag">Linked: F-SSRF-001</span></p>
+            </article>
+            </div><h3>Sources</h3><ul class="source-list"><li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM and GenAI Apps 2025</a> - Prompt injection, excessive agency, sensitive information disclosure, and vector/embedding weaknesses.</li><li><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">Model Context Protocol Security Best Practices</a> - MCP SSRF, token passthrough, authorization, local server compromise, and scope minimization guidance.</li></ul>
+        </section>
+
+        <section id="recommendations">
+          <h2>Personalized Recommendations for Example AI Agent Platform</h2>
+          <p>These actions are tailored to the target, authorization model, actual evidence sources, and the current finding set.</p>
+          <div class="recommendation-grid">
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">High</span>
+                <span class="status-pill">0-7 days</span>
+              </div>
+              <h3>Put the fetch tool behind a shared URL policy gate before letting the agent planner choose destinations.</h3>
+              <p>The example platform gives the model a network-capable action, so prompt injection can become SSRF unless policy enforcement happens outside the LLM.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Agent platform / MCP owner</span>
+                <span class="tag">Findings: F-SSRF-001</span>
+              </div>
+            </article>
+            </div>
+        </section>
+
+        <section id="findings">
+          <h2>Detailed Findings</h2>
+          
+            <article class="finding high" id="f-ssrf-001">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">F-SSRF-001 - sonar, manual-review</p>
+                  <h3>1. Agent web fetch tool can receive model-controlled URLs</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge high">High</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>agent web fetch tool</p></section>
+                <section><h4>Affected File</h4><p>src/tools/fetch_url.ts</p></section>
+                <section><h4>Affected Endpoint</h4><p>/api/agent/tools/fetch-url</p></section>
+                <section><h4>Affected Asset</h4><p>internal network reachable by agent runtime</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;The fetch tool accepts an arbitrary URL from the agent planner without a deterministic host allowlist or private IP block.&quot;,
+  &quot;rule_id&quot;: &quot;custom-ai-ssrf&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>A prompt injection causes the model to call the fetch tool with an internal metadata or service URL. The tool performs the request from the trusted runtime.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>The LLM is not a trusted policy enforcement point. Prompt or RAG injection can influence tool parameters unless deterministic validation exists before network access.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>This finding maps to a common agentic exploit pattern: prompt injection or compromised context influences a network-capable tool, turning an AI workflow into an SSRF path.</p><ul><li><strong>Prompt injection to tool abuse:</strong> The vulnerable tool trusts model-selected URLs rather than a deterministic network policy. Action: Block private and link-local ranges after DNS resolution, require allowlists, and log denied attempts.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Prompt injection and tool abuse pattern&quot;,
+  &quot;cwe&quot;: &quot;CWE-918&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Add a regression test that attempts metadata-service and RFC1918 URLs through the agent tool and asserts denial before outbound network access.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM and GenAI Apps 2025</a> - Prompt injection and excessive agency are directly relevant to model-influenced tool parameters.</li><li><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">Model Context Protocol Security Best Practices</a> - MCP guidance highlights SSRF and least-privilege controls for tool-connected AI systems.</li><li><a href="https://atlas.mitre.org/">MITRE ATLAS</a> - Use ATLAS to map AI-specific adversary behavior around prompt injection and tool abuse.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How Prompt Influence Can Become Agent SSRF</h3>
+      <p>The risk is not that the model is malicious by itself. The risk is that untrusted prompt or retrieved context can steer a network-capable tool unless deterministic URL policy checks happen outside the model.</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Prompt Influence</strong>
+              <p>Untrusted content influences the agent planner.</p>
+              <div class="meta-row"><span class="tag">Actor: External user or poisoned context</span><span class="tag danger">Gap: The prompt is treated as trusted instruction.</span><span class="tag">Break: Classify external prompt and retrieved content as untrusted.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Tool Selection</strong>
+              <p>The planner selects the web fetch tool with a model-controlled destination.</p>
+              <div class="meta-row"><span class="tag">Actor: Agent runtime</span><span class="tag danger">Gap: Tool parameters rely on model judgment.</span><span class="tag">Break: Validate tool parameters before execution.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Network Boundary</strong>
+              <p>The runtime attempts outbound access from a trusted network position.</p>
+              <div class="meta-row"><span class="tag">Actor: Fetch tool</span><span class="tag danger">Gap: No allowlist or private IP block after DNS resolution.</span><span class="tag">Break: Block private, reserved, and link-local ranges.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>Internal services or metadata endpoints may become reachable through the agent.</p>
+              <div class="meta-row"><span class="tag">Actor: Protected asset</span><span class="tag danger">Gap: Runtime egress is too broad.</span><span class="tag">Break: Restrict egress and require approval for new domains.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Denied URL attempts should be logged and covered by regression tests.</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: No test proves the unsafe request is blocked.</span><span class="tag">Break: Add CI tests and runtime detections for blocked destinations.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Cause the agent runtime to request an internal or otherwise unauthorized URL.</p></section><section><h4>Preconditions</h4><p>The attacker can influence prompt, chat, document, or workflow context that reaches the agent planner.</p></section><section><h4>Control Breaks</h4><p>Missing deterministic URL policy enforcement outside the LLM.</p></section><section><h4>Impact</h4><p>Internal network reachable by the agent runtime.</p></section><section><h4>Detection Points</h4><p>Denied requests to private, reserved, link-local, and metadata ranges.</p></section><section><h4>Defensive Breakpoints</h4><p>URL allowlist, DNS resolution checks, egress restriction, approvals, logging, and regression tests.</p></section></div>
+      <p>Conceptual exploit flow for authorized defensive review.</p>
+      <p class="safe-note">No payloads or unauthorized exploitation steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;LLM01 Prompt Injection; LLM06 Excessive Agency&quot;,
+  &quot;owasp_agentic&quot;: &quot;Tool Misuse; Excessive Agency&quot;,
+  &quot;mitre_atlas&quot;: &quot;Prompt Injection / Tool Abuse&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Map, Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-918&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;High&quot;,
+  &quot;rationale&quot;: &quot;High autonomy, privileged network position, reproducible attack path, and weak deterministic control.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Add an outbound host allowlist, block private/link-local IP ranges after DNS resolution, require explicit approval for untrusted domains, and log denied attempts.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Add an integration test that attempts to fetch http://169.254.169.254 and internal RFC1918 ranges through the agent tool and asserts denial before any network request.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Residual risk remains if newly added tools bypass the shared URL validation library.</p></section>
+              </div>
+            </article>
+            
+        </section>
+
+        <section id="roadmap">
+          <h2>Personalized Remediation Roadmap</h2>
+          <table><thead><tr><th>ID</th><th>Severity</th><th>Finding</th><th>Recommended Fix</th></tr></thead><tbody><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td><span class="badge high">High</span></td><td>Agent web fetch tool can receive model-controlled URLs</td><td>Add an outbound host allowlist, block private/link-local IP ranges after DNS resolution, require explicit approval for untrusted domains, and log denied attempts.</td></tr></tbody></table>
+        </section>
+
+        <section id="tests">
+          <h2>Regression Test Plan</h2>
+          <table><thead><tr><th>ID</th><th>Test / Control</th></tr></thead><tbody><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>Add an integration test that attempts to fetch http://169.254.169.254 and internal RFC1918 ranges through the agent tool and asserts denial before any network request.</td></tr></tbody></table>
+        </section>
+
+        <section id="framework">
+          <h2>Framework Coverage</h2>
+          <table><thead><tr><th>ID</th><th>Framework</th><th>Mapping</th></tr></thead><tbody><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>owasp_llm</td><td>LLM01 Prompt Injection; LLM06 Excessive Agency</td></tr><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>owasp_agentic</td><td>Tool Misuse; Excessive Agency</td></tr><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>mitre_atlas</td><td>Prompt Injection / Tool Abuse</td></tr><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>nist_ai_rmf</td><td>Map, Measure, Manage</td></tr><tr><td><a href="#f-ssrf-001">F-SSRF-001</a></td><td>cwe</td><td>CWE-918</td></tr></tbody></table>
+        </section>
+
+        <section class="panel" id="residual">
+          <h2>Residual Risk and Assumptions</h2>
+          <p>Residual risk depends on complete remediation, regression test adoption, scanner coverage, evidence redaction, and continued enforcement of deterministic authorization around model-driven actions.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

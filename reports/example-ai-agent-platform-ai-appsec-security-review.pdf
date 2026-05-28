@@ -1,0 +1,419 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Length 2884 >>
+stream
+q 0.970 0.980 0.990 rg 0.00 0.00 612.00 792.00 re f Q
+q 0.060 0.130 0.250 rg 0.00 602.00 612.00 190.00 re f Q
+q 0.100 0.300 0.750 rg 48.00 688.00 46.00 46.00 re f Q
+BT /F2 16.0 Tf 1.000 1.000 1.000 rg 60.00 706.00 Td (HB) Tj ET
+BT /F2 11.0 Tf 0.750 0.860 1.000 rg 110.00 722.00 Td (HADES BLACKWATCH) Tj ET
+BT /F2 24.0 Tf 1.000 1.000 1.000 rg 48.00 744.00 Td (AI AppSec Security Review) Tj ET
+BT /F1 10.0 Tf 0.750 0.860 1.000 rg 48.00 624.00 Td (Internal - Version 0.1.0) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 548.00 Td (Executive Summary) Tj ET
+q 0.830 0.860 0.900 RG 48.00 538.00 m 564.00 538.00 l S Q
+BT /F2 12.0 Tf 0.070 0.090 0.150 rg 48.00 522.00 Td (Target: Example AI Agent Platform) Tj ET
+BT /F1 10.0 Tf 0.360 0.390 0.450 rg 48.00 502.00 Td (Date: 2026-05-12) Tj ET
+BT /F2 12.0 Tf 0.060 0.130 0.250 rg 48.00 478.00 Td (Request changes: high-risk issues require remediation before approval.) Tj ET
+q 1.000 1.000 1.000 rg 48.00 388.00 94.00 58.00 re f Q
+q 0.830 0.860 0.900 RG 48.00 388.00 94.00 58.00 re S Q
+q 0.600 0.110 0.110 rg 48.00 440.00 94.00 6.00 re f Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 57.00 422.00 Td (Critical) Tj ET
+BT /F2 20.0 Tf 0.070 0.090 0.150 rg 57.00 401.00 Td (0) Tj ET
+q 1.000 1.000 1.000 rg 150.00 388.00 94.00 58.00 re f Q
+q 0.830 0.860 0.900 RG 150.00 388.00 94.00 58.00 re S Q
+q 0.710 0.330 0.040 rg 150.00 440.00 94.00 6.00 re f Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 159.00 422.00 Td (High) Tj ET
+BT /F2 20.0 Tf 0.070 0.090 0.150 rg 159.00 401.00 Td (1) Tj ET
+q 1.000 1.000 1.000 rg 252.00 388.00 94.00 58.00 re f Q
+q 0.830 0.860 0.900 RG 252.00 388.00 94.00 58.00 re S Q
+q 0.630 0.380 0.030 rg 252.00 440.00 94.00 6.00 re f Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 261.00 422.00 Td (Medium) Tj ET
+BT /F2 20.0 Tf 0.070 0.090 0.150 rg 261.00 401.00 Td (0) Tj ET
+q 1.000 1.000 1.000 rg 354.00 388.00 94.00 58.00 re f Q
+q 0.830 0.860 0.900 RG 354.00 388.00 94.00 58.00 re S Q
+q 0.020 0.470 0.340 rg 354.00 440.00 94.00 6.00 re f Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 363.00 422.00 Td (Low) Tj ET
+BT /F2 20.0 Tf 0.070 0.090 0.150 rg 363.00 401.00 Td (0) Tj ET
+q 1.000 1.000 1.000 rg 456.00 388.00 94.00 58.00 re f Q
+q 0.830 0.860 0.900 RG 456.00 388.00 94.00 58.00 re S Q
+q 0.280 0.330 0.410 rg 456.00 440.00 94.00 6.00 re f Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 465.00 422.00 Td (Informational) Tj ET
+BT /F2 20.0 Tf 0.070 0.090 0.150 rg 465.00 401.00 Td (0) Tj ET
+BT /F1 10.0 Tf 0.360 0.390 0.450 rg 48.00 354.00 Td (Risk posture: Moderate. This report contains 1 normalized finding\(s\), ordered by severity and supported) Tj ET
+BT /F1 10.0 Tf 0.360 0.390 0.450 rg 48.00 340.00 Td (by local source review and generated evidence.) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 1) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Length 3749 >>
+stream
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 736.00 Td (Scope and Authorization) Tj ET
+q 0.830 0.860 0.900 RG 48.00 726.00 m 564.00 726.00 l S Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 710.00 Td (ENVIRONMENT) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 699.00 Td (local/staging) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 681.50 Td (ACCESS LEVEL) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 670.50 Td (source + imported scanner evidence) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 653.00 Td (AUTHORIZED) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 642.00 Td (True) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 624.50 Td (INCLUDED) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 613.50 Td ([) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 600.00 Td (  "LLM prompt flow",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 586.50 Td (  "MCP tool manifest",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 573.00 Td (  "Agent web fetch tool",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 559.50 Td (  "Scanner finding import") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 546.00 Td (]) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 528.50 Td (EXCLUDED) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 517.50 Td ([) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 504.00 Td (  "Production active scanning",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 490.50 Td (  "Credentialed cloud posture review") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 477.00 Td (]) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 451.50 Td (Methodology) Tj ET
+q 0.830 0.860 0.900 RG 48.00 441.50 m 564.00 441.50 l S Q
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 425.50 Td (FRAMEWORKS) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 414.50 Td ([) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 401.00 Td (  "OWASP LLM Top 10",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 387.50 Td (  "OWASP Agentic Top 10",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 374.00 Td (  "OWASP AIVSS",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 360.50 Td (  "MITRE ATLAS",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 347.00 Td (  "NIST AI RMF GenAI Profile") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 333.50 Td (]) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 316.00 Td (AGENTS USED) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 305.00 Td ([) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 291.50 Td (  "Security Orchestrator",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 278.00 Td (  "Latest Threat Intel",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 264.50 Td (  "MCP Server Auditor",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 251.00 Td (  "Secure Code Review",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 237.50 Td (  "Finding Correlator",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 224.00 Td (  "Report") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 210.50 Td (]) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 193.00 Td (SCANNER BACKENDS) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 182.00 Td ([) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 168.50 Td (  "SonarQube imported evidence") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 155.00 Td (]) Tj ET
+BT /F2 8.0 Tf 0.360 0.390 0.450 rg 48.00 137.50 Td (MCP POLICY) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 126.50 Td (Escalation-only; local evidence and imported reports were preferred.) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 101.00 Td (Skill Coverage and Specialist Notes) Tj ET
+q 0.830 0.860 0.900 RG 48.00 91.00 m 564.00 91.00 l S Q
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 2) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Length 4832 >>
+stream
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 744.00 Td (This review used a focused subset of specialists because the input combined source review with imported) Tj ET
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 730.00 Td (scanner evidence.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 708.00 Td (Security Orchestrator) Tj ET
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 48.00 690.00 Td (Status: Used) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 673.50 Td (Focus: Scope, authorization, severity, and final verdict) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 657.00 Td (Coverage: Confirmed local/staging scope and avoided live scanner or MCP actions.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 640.50 Td (Latest Threat Intel Agent) Tj ET
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 48.00 622.50 Td (Status: Used) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 606.00 Td (Focus: Per-finding threat context and source freshness) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 589.50 Td (Coverage: Added source-linked threat intel for the SSRF/tool-abuse finding.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 573.00 Td (MCP Server Auditor) Tj ET
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 48.00 555.00 Td (Status: Used) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 538.50 Td (Focus: Tool boundary and least-privilege review) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 522.00 Td (Coverage: Reviewed the agent fetch tool as an MCP-adjacent privileged action.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 505.50 Td (Report Agent) Tj ET
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 48.00 487.50 Td (Status: Used) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 471.00 Td (Focus: Detailed HTML/PDF deliverable) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 454.50 Td (Coverage: Converted the normalized finding into a findings-first report with fixes and tests.) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 430.00 Td (Threat Intelligence) Tj ET
+q 0.830 0.860 0.900 RG 48.00 420.00 m 564.00 420.00 l S Q
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 48.00 404.00 Td (As of: 2026-05-28) Tj ET
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 382.50 Td (The current threat context for agentic systems emphasizes prompt injection reaching tools, excessive) Tj ET
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 368.50 Td (agency, MCP authorization boundaries, SSRF controls, and traceable governance evidence.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 346.50 Td (Prompt injection to privileged tools) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 328.50 Td (Why it matters: OWASP LLM 2025 keeps prompt injection and excessive agency in scope for GenAI apps, and the) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 315.00 Td (reviewed issue allows model-influenced URLs to reach a network-capable tool.) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 298.50 Td (Recommended action: Enforce deterministic URL validation, egress controls, approval gates, and logging) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 285.00 Td (outside the model.) Tj ET
+BT /F2 9.0 Tf 0.360 0.390 0.450 rg 48.00 268.50 Td (Linked findings: F-SSRF-001) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 247.50 Td (MCP SSRF and token boundary risk) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 229.50 Td (Why it matters: MCP security guidance calls out SSRF, token passthrough, scope minimization, and) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 216.00 Td (authorization validation as key implementation risks.) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 199.50 Td (Recommended action: Bind tokens to intended audiences, avoid token passthrough, minimize scopes, and block) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 186.00 Td (private or reserved IP ranges before outbound requests.) Tj ET
+BT /F2 9.0 Tf 0.360 0.390 0.450 rg 48.00 169.50 Td (Linked findings: F-SSRF-001) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 148.50 Td (Threat Intel Sources) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 130.50 Td (OWASP Top 10 for LLM and GenAI Apps 2025 - https://genai.owasp.org/llm-top-10/ - Prompt injection, excessive agency,) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 117.70 Td (sensitive information disclosure, and vector/embedding weaknesses.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 101.90 Td (Model Context Protocol Security Best Practices -) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 89.10 Td (https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices - MCP SSRF, token passthrough,) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 76.30 Td (authorization, local server compromise, and scope minimization guidance.) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 3) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Length 1816 >>
+stream
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 736.00 Td (Personalized Recommendations) Tj ET
+q 0.830 0.860 0.900 RG 48.00 726.00 m 564.00 726.00 l S Q
+BT /F1 10.0 Tf 0.360 0.390 0.450 rg 48.00 710.00 Td (These actions are tailored to Example AI Agent Platform, the authorization model, actual evidence) Tj ET
+BT /F1 10.0 Tf 0.360 0.390 0.450 rg 48.00 696.00 Td (sources, and the current finding set.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 674.00 Td (High) Tj ET
+BT /F2 10.0 Tf 0.070 0.090 0.150 rg 48.00 656.00 Td (Put the fetch tool behind a shared URL policy gate before letting the agent planner choose) Tj ET
+BT /F2 10.0 Tf 0.070 0.090 0.150 rg 48.00 642.00 Td (destinations.) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 624.00 Td (Why: The example platform gives the model a network-capable action, so prompt injection can become SSRF) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 610.50 Td (unless policy enforcement happens outside the LLM.) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 594.00 Td (Owner: Agent platform / MCP owner) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 577.50 Td (Timeframe: 0-7 days) Tj ET
+BT /F2 9.0 Tf 0.360 0.390 0.450 rg 48.00 561.00 Td (Linked findings: F-SSRF-001) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 532.00 Td (Findings Index) Tj ET
+q 0.830 0.860 0.900 RG 48.00 522.00 m 564.00 522.00 l S Q
+q 0.710 0.330 0.040 rg 48.00 501.00 72.00 16.00 re f Q
+BT /F2 8.0 Tf 1.000 1.000 1.000 rg 55.00 506.00 Td (High) Tj ET
+BT /F2 9.5 Tf 0.070 0.090 0.150 rg 132.00 506.00 Td (F-SSRF-001: Agent web fetch tool can receive model-controlled URLs) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 4) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Length 2349 >>
+stream
+BT /F2 10.0 Tf 0.360 0.390 0.450 rg 48.00 744.00 Td (F-SSRF-001) Tj ET
+q 0.710 0.330 0.040 rg 486.00 740.00 72.00 16.00 re f Q
+BT /F2 8.0 Tf 1.000 1.000 1.000 rg 493.00 745.00 Td (High) Tj ET
+BT /F2 17.0 Tf 0.060 0.130 0.250 rg 48.00 720.00 Td (1. Agent web fetch tool can receive model-controlled URLs) Tj ET
+BT /F2 9.5 Tf 0.360 0.390 0.450 rg 48.00 690.00 Td (Confidence: high) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 668.50 Td (Affected component: agent web fetch tool) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 653.00 Td (Affected file: src/tools/fetch_url.ts) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 637.50 Td (Affected endpoint: /api/agent/tools/fetch-url) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 622.00 Td (Affected asset: internal network reachable by agent runtime) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 606.50 Td (Evidence) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 588.50 Td ({) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 575.70 Td (  "summary": "The fetch tool accepts an arbitrary URL from the agent planner without a deterministic) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 562.90 Td (host allowlist or private IP block.",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 550.10 Td (  "rule_id": "custom-ai-ssrf") Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 537.30 Td (}) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 514.50 Td (Attack Path) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 496.50 Td (A prompt injection causes the model to call the fetch tool with an internal metadata or service URL. The) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 483.00 Td (tool performs the request from the trusted runtime.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 459.50 Td (AI / Agent Relevance) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 441.50 Td (The LLM is not a trusted policy enforcement point. Prompt or RAG injection can influence tool parameters) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 428.00 Td (unless deterministic validation exists before network access.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 404.50 Td (Threat Intelligence) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 5) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Length 4360 >>
+stream
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 744.00 Td ({) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 730.50 Td (  "as_of": "2026-05-28",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 717.00 Td (  "summary": "This finding maps to a common agentic exploit pattern: prompt injection or compromised context) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 703.50 Td (influences a network-capable tool, turning an AI workflow into an SSRF path.",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 690.00 Td (  "sources": [) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 676.50 Td (    {) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 663.00 Td (      "name": "OWASP Top 10 for LLM and GenAI Apps 2025",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 649.50 Td (      "url": "https://genai.owasp.org/llm-top-10/",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 636.00 Td (      "relevance": "Prompt injection and excessive agency are directly relevant to model-influenced tool) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 622.50 Td (parameters.") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 609.00 Td (    },) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 595.50 Td (    {) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 582.00 Td (      "name": "Model Context Protocol Security Best Practices",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 568.50 Td (      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 555.00 Td (      "relevance": "MCP guidance highlights SSRF and least-privilege controls for tool-connected AI) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 541.50 Td (systems.") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 528.00 Td (    },) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 514.50 Td (    {) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 501.00 Td (      "name": "MITRE ATLAS",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 487.50 Td (      "url": "https://atlas.mitre.org/",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 474.00 Td (      "relevance": "Use ATLAS to map AI-specific adversary behavior around prompt injection and tool abuse.") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 460.50 Td (    }) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 447.00 Td (  ],) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 433.50 Td (  "signals": [) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 420.00 Td (    {) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 406.50 Td (      "theme": "Prompt injection to tool abuse",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 393.00 Td (      "relevance": "The vulnerable tool trusts model-selected URLs rather than a deterministic network) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 379.50 Td (policy.",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 366.00 Td (      "recommended_action": "Block private and link-local ranges after DNS resolution, require allowlists,) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 352.50 Td (and log denied attempts.") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 339.00 Td (    }) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 325.50 Td (  ],) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 312.00 Td (  "mapped_techniques": {) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 298.50 Td (    "mitre_atlas": "Prompt injection and tool abuse pattern",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 285.00 Td (    "cwe": "CWE-918") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 271.50 Td (  },) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 258.00 Td (  "detection_or_test": "Add a regression test that attempts metadata-service and RFC1918 URLs through the) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 244.50 Td (agent tool and asserts denial before outbound network access.",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 231.00 Td (  "freshness": "Checked against official sources on 2026-05-28",) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 217.50 Td (  "confidence": "High") Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 204.00 Td (}) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 180.50 Td (Framework Mappings) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 6) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Length 5168 >>
+stream
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 744.00 Td ({) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 731.20 Td (  "owasp_llm": "LLM01 Prompt Injection; LLM06 Excessive Agency",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 718.40 Td (  "owasp_agentic": "Tool Misuse; Excessive Agency",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 705.60 Td (  "mitre_atlas": "Prompt Injection / Tool Abuse",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 692.80 Td (  "nist_ai_rmf": "Map, Measure, Manage",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 680.00 Td (  "cwe": "CWE-918",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 667.20 Td (  "cve": null) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 654.40 Td (}) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 631.60 Td (Score) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 613.60 Td ({) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 600.80 Td (  "system": "AIVSS",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 588.00 Td (  "value": "High",) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 575.20 Td (  "rationale": "High autonomy, privileged network position, reproducible attack path, and weak) Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 562.40 Td (deterministic control.") Tj ET
+BT /F3 8.8 Tf 0.070 0.090 0.150 rg 48.00 549.60 Td (}) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 526.80 Td (Recommended Fix) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 508.80 Td (Add an outbound host allowlist, block private/link-local IP ranges after DNS resolution, require explicit) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 495.30 Td (approval for untrusted domains, and log denied attempts.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 471.80 Td (Regression Test) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 453.80 Td (Add an integration test that attempts to fetch http://169.254.169.254 and internal RFC1918 ranges through) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 440.30 Td (the agent tool and asserts denial before any network request.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 416.80 Td (Residual Risk) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 398.80 Td (Residual risk remains if newly added tools bypass the shared URL validation library.) Tj ET
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 375.30 Td (Attack Path Visualization) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 357.30 Td (The risk is not that the model is malicious by itself. The risk is that untrusted prompt or retrieved) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 343.80 Td (context can steer a network-capable tool unless deterministic URL policy checks happen outside the model.) Tj ET
+BT /F2 9.2 Tf 0.070 0.090 0.150 rg 48.00 324.30 Td (1. Prompt Influence: Untrusted content influences the agent planner.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 309.10 Td (Control gap: The prompt is treated as trusted instruction.) Tj ET
+BT /F1 8.8 Tf 0.050 0.460 0.430 rg 48.00 294.30 Td (Defensive breakpoint: Classify external prompt and retrieved content as untrusted.) Tj ET
+BT /F2 9.2 Tf 0.070 0.090 0.150 rg 48.00 277.50 Td (2. Tool Selection: The planner selects the web fetch tool with a model-controlled destination.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 262.30 Td (Control gap: Tool parameters rely on model judgment.) Tj ET
+BT /F1 8.8 Tf 0.050 0.460 0.430 rg 48.00 247.50 Td (Defensive breakpoint: Validate tool parameters before execution.) Tj ET
+BT /F2 9.2 Tf 0.070 0.090 0.150 rg 48.00 230.70 Td (3. Network Boundary: The runtime attempts outbound access from a trusted network position.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 215.50 Td (Control gap: No allowlist or private IP block after DNS resolution.) Tj ET
+BT /F1 8.8 Tf 0.050 0.460 0.430 rg 48.00 200.70 Td (Defensive breakpoint: Block private, reserved, and link-local ranges.) Tj ET
+BT /F2 9.2 Tf 0.070 0.090 0.150 rg 48.00 183.90 Td (4. Impact: Internal services or metadata endpoints may become reachable through the agent.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 168.70 Td (Control gap: Runtime egress is too broad.) Tj ET
+BT /F1 8.8 Tf 0.050 0.460 0.430 rg 48.00 153.90 Td (Defensive breakpoint: Restrict egress and require approval for new domains.) Tj ET
+BT /F2 9.2 Tf 0.070 0.090 0.150 rg 48.00 137.10 Td (5. Detect / Break: Denied URL attempts should be logged and covered by regression tests.) Tj ET
+BT /F1 8.8 Tf 0.360 0.390 0.450 rg 48.00 121.90 Td (Control gap: No test proves the unsafe request is blocked.) Tj ET
+BT /F1 8.8 Tf 0.050 0.460 0.430 rg 48.00 107.10 Td (Defensive breakpoint: Add CI tests and runtime detections for blocked destinations.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 90.30 Td (Attacker goal: Cause the agent runtime to request an internal or otherwise unauthorized URL.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 74.50 Td (Preconditions: The attacker can influence prompt, chat, document, or workflow context that reaches the agent planner.) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 7) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Length 987 >>
+stream
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 744.00 Td (Control breaks: Missing deterministic URL policy enforcement outside the LLM.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 728.20 Td (Impact: Internal network reachable by the agent runtime.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 712.40 Td (Detection points: Denied requests to private, reserved, link-local, and metadata ranges.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 696.60 Td (Defensive breakpoints: URL allowlist, DNS resolution checks, egress restriction, approvals, logging, and regression) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 683.80 Td (tests.) Tj ET
+BT /F1 8.8 Tf 0.070 0.090 0.150 rg 48.00 668.00 Td (Safety note: No payloads or unauthorized exploitation steps are provided.) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 8) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Length 1923 >>
+stream
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 736.00 Td (Personalized Remediation Roadmap) Tj ET
+q 0.830 0.860 0.900 RG 48.00 726.00 m 564.00 726.00 l S Q
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 710.00 Td (F-SSRF-001) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 692.00 Td (Add an outbound host allowlist, block private/link-local IP ranges after DNS resolution, require explicit) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 678.50 Td (approval for untrusted domains, and log denied attempts.) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 649.00 Td (Regression Test Plan) Tj ET
+q 0.830 0.860 0.900 RG 48.00 639.00 m 564.00 639.00 l S Q
+BT /F2 13.0 Tf 0.060 0.130 0.250 rg 48.00 623.00 Td (F-SSRF-001) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 605.00 Td (Add an integration test that attempts to fetch http://169.254.169.254 and internal RFC1918 ranges through) Tj ET
+BT /F1 9.5 Tf 0.070 0.090 0.150 rg 48.00 591.50 Td (the agent tool and asserts denial before any network request.) Tj ET
+BT /F2 18.0 Tf 0.060 0.130 0.250 rg 48.00 562.00 Td (Residual Risk and Assumptions) Tj ET
+q 0.830 0.860 0.900 RG 48.00 552.00 m 564.00 552.00 l S Q
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 536.00 Td (Residual risk depends on complete remediation, regression test adoption, scanner coverage, evidence) Tj ET
+BT /F1 10.0 Tf 0.070 0.090 0.150 rg 48.00 522.00 Td (redaction, and continued enforcement of deterministic authorization around model-driven actions.) Tj ET
+BT /F2 10.0 Tf 0.070 0.090 0.150 rg 48.00 500.00 Td (Overall verdict: Request changes: high-risk issues require remediation before approval.) Tj ET
+BT /F1 9.0 Tf 0.360 0.390 0.450 rg 48.00 478.00 Td (Report title: AI AppSec Security Review) Tj ET
+q 0.830 0.860 0.900 RG 48.00 38.00 m 564.00 38.00 l S Q
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 48.00 24.00 Td (Hades Blackwatch Security Report) Tj ET
+BT /F1 8.0 Tf 0.360 0.390 0.450 rg 524.00 24.00 Td (Page 9) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 4 0 R >>
+endobj
+14 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 5 0 R >>
+endobj
+15 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 6 0 R >>
+endobj
+16 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 7 0 R >>
+endobj
+17 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 8 0 R >>
+endobj
+18 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 9 0 R >>
+endobj
+19 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 10 0 R >>
+endobj
+20 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 11 0 R >>
+endobj
+21 0 obj
+<< /Type /Page /Parent 22 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 12 0 R >>
+endobj
+22 0 obj
+<< /Type /Pages /Kids [13 0 R 14 0 R 15 0 R 16 0 R 17 0 R 18 0 R 19 0 R 20 0 R 21 0 R] /Count 9 >>
+endobj
+23 0 obj
+<< /Type /Catalog /Pages 22 0 R >>
+endobj
+xref
+0 24
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000000222 00000 n 
+0000003158 00000 n 
+0000006959 00000 n 
+0000011843 00000 n 
+0000013711 00000 n 
+0000016112 00000 n 
+0000020524 00000 n 
+0000025745 00000 n 
+0000026784 00000 n 
+0000028760 00000 n 
+0000028908 00000 n 
+0000029056 00000 n 
+0000029204 00000 n 
+0000029352 00000 n 
+0000029500 00000 n 
+0000029648 00000 n 
+0000029797 00000 n 
+0000029946 00000 n 
+0000030095 00000 n 
+0000030210 00000 n 
+trailer
+<< /Size 24 /Root 23 0 R >>
+startxref
+30261
+%%EOF

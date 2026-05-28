@@ -1,0 +1,712 @@
+{
+  "metadata": {
+    "title": "Hades Blackwatch Detailed Full-Stack Analysis",
+    "target": "Hades Blackwatch Skill Repository",
+    "author": "Hades Blackwatch",
+    "classification": "Internal",
+    "version": "2.2",
+    "date": "2026-05-28"
+  },
+  "scope": {
+    "environment": "local repository and generated documentation/report artifacts",
+    "access_level": "source code, docs, examples, local script execution, generated report artifacts",
+    "authorized": true,
+    "included": [
+      "SKILL.md full-stack workflow",
+      "agent manifest and specialist role files",
+      "MCP escalation-only policy",
+      "scanner normalization pipeline",
+      "MCP manifest audit pipeline",
+      "surface mapping pipeline",
+      "prompt attack pack generation",
+      "HTML/PDF report generation",
+      "README and docs/index.html",
+      "example scanner and report inputs"
+    ],
+    "excluded": [
+      "live MCP server calls",
+      "network-based scanner integrations",
+      "third-party package vulnerability lookups",
+      "active tests against external applications",
+      "production deployment or installation review"
+    ]
+  },
+  "methodology": {
+    "frameworks": [
+      "OWASP LLM Top 10",
+      "OWASP Agentic Top 10",
+      "OWASP Agentic Skills Top 10",
+      "OWASP AIVSS",
+      "MITRE ATLAS",
+      "NIST AI RMF GenAI Profile",
+      "OWASP Web/API Top 10 and CWE for conventional appsec mapping"
+    ],
+    "agents_used": [
+      "Security Orchestrator",
+      "Latest Threat Intel",
+      "AI Threat Model",
+      "MCP Server Auditor",
+      "Scanner Registry",
+      "Prompt Injection",
+      "Agent Tool Security",
+      "RAG and Data Security",
+      "Secure Code Review",
+      "Supply Chain",
+      "Finding Correlator",
+      "Test Builder",
+      "Report"
+    ],
+    "scanner_backends": [
+      "surface_mapper.py local run",
+      "mcp_manifest_audit.py local run",
+      "normalize_findings.py local run",
+      "prompt_attack_pack.py local run",
+      "generate_report.py local run",
+      "manual source review"
+    ],
+    "mcp_policy": "No live MCP calls were used. The MCP necessity test did not pass because local source, docs, examples, generated artifacts, and bundled scripts were sufficient."
+  },
+  "skill_coverage": {
+    "summary": "This detailed review is personalized for the Hades Blackwatch skill repository. The specialist notes separate the agents that materially contributed from agents whose domain was checked but not deeply exercised because the repo is a local skill/tooling package rather than a deployed AI application.",
+    "specialists": [
+      {
+        "name": "Security Orchestrator",
+        "status": "Used",
+        "focus": "Scope, authorization, MCP necessity, final severity, and report structure",
+        "coverage": "Kept the review local and source-driven, avoided unnecessary MCP calls, and prioritized six findings by report-leakage, evidence integrity, MCP audit depth, schema migration compatibility, documentation accuracy, and tests.",
+        "notes": "Keep this role as the default entry point for full-stack review so every generated report explains what was actually tested and what was not."
+      },
+      {
+        "name": "Latest Threat Intel Agent",
+        "status": "Used for report refresh",
+        "focus": "Current OWASP, MITRE, NIST, and MCP guidance relevant to skills, agent tools, scanner evidence, and MCP boundaries",
+        "coverage": "Added dated threat-intelligence signals and official source links so the report explains why redaction, MCP least privilege, evidence provenance, and governance controls matter for this repo.",
+        "notes": "Run this agent when reports claim current framework coverage, CVEs, vendor tool behavior, or external threat activity."
+      },
+      {
+        "name": "AI Threat Model Agent",
+        "status": "Used",
+        "focus": "Trust boundaries between prompts, local scripts, generated reports, scanner evidence, and future MCP tools",
+        "coverage": "Identified the main local attack paths: untrusted scanner evidence flowing into reports, generated reports polluting future analysis, and MCP schema under-classification."
+      },
+      {
+        "name": "MCP Server Auditor",
+        "status": "Used",
+        "focus": "MCP escalation policy and manifest risk-tier analysis",
+        "coverage": "Validated that no live MCP call was needed and found that nested tool schemas need recursive inspection before real Burp, Qualys, Sonar, or custom MCP adapters are trusted."
+      },
+      {
+        "name": "Scanner Registry Agent",
+        "status": "Partially covered",
+        "focus": "Scanner backend claims, evidence ingestion, and auto-detection expectations",
+        "coverage": "Confirmed report ingestion and local scripts exist, while scanner auto-detection remains roadmap-only and should be described that way until implemented."
+      },
+      {
+        "name": "Prompt Injection Agent",
+        "status": "Scoped",
+        "focus": "Prompt and report-content poisoning paths",
+        "coverage": "No live model target was present, but generated artifacts and scanner evidence were treated as untrusted context that can influence later agent runs."
+      },
+      {
+        "name": "Agent Tool Security Agent",
+        "status": "Used",
+        "focus": "Tool permissions, evidence-to-report flow, and state-changing MCP policy",
+        "coverage": "Mapped the most important tool risks to evidence disclosure, MCP authority classification, and approval boundaries for future scanner adapters."
+      },
+      {
+        "name": "RAG and Data Security Agent",
+        "status": "Low relevance",
+        "focus": "Retrieved content and data-store exposure",
+        "coverage": "The repository does not implement a RAG runtime, but the same context-poisoning concern appears in generated reports being re-ingested by later local scans."
+      },
+      {
+        "name": "Secure Code Review Agent",
+        "status": "Used",
+        "focus": "Python scripts, JSON normalization, HTML/PDF rendering, and local workflow integrity",
+        "coverage": "Found redaction, generated-artifact scanning, schema migration, and missing automated test risks."
+      },
+      {
+        "name": "Supply Chain Agent",
+        "status": "Scoped",
+        "focus": "Skill, script, schema, and scanner-adapter supply-chain integrity",
+        "coverage": "Highlighted schema migration compatibility and future scanner-adapter expectations; live package vulnerability lookup was excluded from this local review."
+      },
+      {
+        "name": "Finding Correlator",
+        "status": "Used",
+        "focus": "Deduplication, severity calibration, and root-cause grouping",
+        "coverage": "Grouped the findings into three practical themes: sensitive evidence handling, evidence quality/provenance, and implementation-to-documentation alignment."
+      },
+      {
+        "name": "Test Builder",
+        "status": "Used",
+        "focus": "Regression tests, fixtures, and release gates",
+        "coverage": "Converted each finding into a concrete test or checklist item, with emphasis on redaction, surface exclusion, recursive MCP schema checks, schema identity, and CI coverage."
+      },
+      {
+        "name": "Report Agent",
+        "status": "Used",
+        "focus": "HTML/PDF deliverables, personalized recommendations, threat intel, and audit-ready detail",
+        "coverage": "Generated the upgraded report structure with first-class skill coverage, source-linked threat intelligence, and target-specific recommendations."
+      }
+    ]
+  },
+  "threat_intel": {
+    "as_of": "2026-05-28",
+    "summary": "The current threat context for Hades Blackwatch centers on untrusted evidence flowing through agentic review pipelines, MCP/tool authority boundaries, skill and adapter supply-chain integrity, and governance-grade traceability. These signals are mapped to the local findings instead of being generic framework text.",
+    "signals": [
+      {
+        "theme": "Scanner and tool output is hostile evidence until minimized",
+        "relevance": "OWASP LLM guidance continues to emphasize sensitive information disclosure and improper output handling. For this repo, the practical risk is raw Burp, Qualys, Sonar, Semgrep, CodeQL, Trivy, or custom JSON evidence being copied into polished reports.",
+        "recommended_action": "Add recursive redaction before normalization and rendering, then make report generation tests assert that secrets never survive into HTML or PDF bytes.",
+        "linked_findings": [
+          "HB-DET-001"
+        ]
+      },
+      {
+        "theme": "MCP security depends on least privilege and precise authorization boundaries",
+        "relevance": "MCP security guidance calls out token passthrough, SSRF, local server compromise, session handling, and scope minimization. For Hades Blackwatch, this makes recursive manifest inspection and escalation-only MCP use important before connecting Burp, Qualys, Sonar, or internal scanners.",
+        "recommended_action": "Upgrade nested schema analysis, require risk-tier evidence for every MCP tool, and keep live MCP calls behind the necessity test.",
+        "linked_findings": [
+          "HB-DET-003",
+          "HB-DET-005"
+        ]
+      },
+      {
+        "theme": "Generated reports can become context poisoning in later agent runs",
+        "relevance": "Agentic systems are sensitive to stale or attacker-shaped context. The local surface mapper currently treats reports as review evidence, which can anchor later analysis on old findings and inflated keyword counts.",
+        "recommended_action": "Exclude generated report paths by default and require explicit opt-in when report artifacts themselves are the audit target.",
+        "linked_findings": [
+          "HB-DET-002"
+        ]
+      },
+      {
+        "theme": "Skill supply-chain integrity needs stable schemas and regression gates",
+        "relevance": "OWASP Agentic Skills and NIST AI RMF style governance both push toward provenance, traceability, and repeatable controls. Undocumented schema migration and manual-only smoke tests weaken downstream trust in this skill package.",
+        "recommended_action": "Document schema migration behavior and add automated tests plus CI before new adapters are added.",
+        "linked_findings": [
+          "HB-DET-004",
+          "HB-DET-006"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "OWASP Top 10 for LLM and GenAI Apps 2025",
+        "url": "https://genai.owasp.org/llm-top-10/",
+        "relevance": "Prompt injection, sensitive information disclosure, improper output handling, excessive agency, and vector/embedding risks."
+      },
+      {
+        "name": "OWASP Top 10 for Agentic Applications",
+        "url": "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
+        "relevance": "Agent goal hijack, tool misuse, identity and privilege abuse, agentic supply chain, memory/context poisoning, and inter-agent communication risk."
+      },
+      {
+        "name": "OWASP Agentic Skills Top 10",
+        "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+        "relevance": "Skill/plugin execution-layer risks such as malicious skills, over-privilege, insecure metadata, weak isolation, poor scanning, and governance gaps."
+      },
+      {
+        "name": "Model Context Protocol Security Best Practices",
+        "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+        "relevance": "MCP confused deputy, token passthrough, SSRF, session hijacking, local server compromise, and scope minimization."
+      },
+      {
+        "name": "NIST AI Risk Management Framework and GenAI Profile",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+        "relevance": "Governance and lifecycle risk management for generative AI systems."
+      },
+      {
+        "name": "MITRE ATLAS",
+        "url": "https://atlas.mitre.org/",
+        "relevance": "Threat-informed mapping for adversarial tactics and techniques against AI-enabled systems."
+      }
+    ]
+  },
+  "personalized_recommendations": [
+    {
+      "priority": "High",
+      "recommendation": "Make evidence redaction the next release gate before this skill is used on real scanner exports.",
+      "why": "Hades Blackwatch is designed to ingest Burp, Qualys, Sonar, Semgrep, CodeQL, Trivy, and custom evidence. Without deterministic minimization, the report generator can turn private scanner data into a broadly shared HTML/PDF artifact.",
+      "owner": "Security tooling owner",
+      "timeframe": "0-7 days",
+      "linked_findings": [
+        "HB-DET-001"
+      ]
+    },
+    {
+      "priority": "Medium",
+      "recommendation": "Keep generated reports out of default source mapping so later reviews stay anchored to primary evidence.",
+      "why": "This repository generates rich security reports under reports/. Letting future scans read those files as source evidence can inflate surface counts and reintroduce stale findings.",
+      "owner": "Security tooling owner",
+      "timeframe": "1 sprint",
+      "linked_findings": [
+        "HB-DET-002"
+      ]
+    },
+    {
+      "priority": "Medium",
+      "recommendation": "Upgrade MCP manifest auditing before connecting live Burp, Qualys, Sonar, or internal scanner MCP servers.",
+      "why": "The skill's strategy is MCP only when absolutely needed. That policy is strongest when the auditor can see nested command, URL, credential, body, header, and action fields before a tool is trusted.",
+      "owner": "Agent platform / MCP owner",
+      "timeframe": "1 sprint",
+      "linked_findings": [
+        "HB-DET-003"
+      ]
+    },
+    {
+      "priority": "Medium",
+      "recommendation": "Document the normalized finding schema migration before downstream integrations depend on it.",
+      "why": "The skill now emits the Hades Blackwatch schema after the rename, but downstream consumers may still have older Cerberus-era expectations. A migration note keeps reports, dashboards, and future agents aligned.",
+      "owner": "Integration owner",
+      "timeframe": "1 sprint",
+      "linked_findings": [
+        "HB-DET-004"
+      ]
+    },
+    {
+      "priority": "Low",
+      "recommendation": "Adjust README and docs language so scanner detection is described as designed support until the registry script exists.",
+      "why": "The skill should feel powerful, but security users need exact evidence. Capability wording should distinguish implemented scripts, report ingestion, role guidance, and roadmap work.",
+      "owner": "Documentation owner",
+      "timeframe": "Next hardening cycle",
+      "linked_findings": [
+        "HB-DET-005"
+      ]
+    },
+    {
+      "priority": "Low",
+      "recommendation": "Turn the current smoke checks into committed tests and a CI gate before adding more integrations.",
+      "why": "Hades Blackwatch is becoming reusable security infrastructure. Redaction, schema naming, report rendering, generated-output exclusions, and recursive MCP checks should fail fast when changed.",
+      "owner": "Engineering quality owner",
+      "timeframe": "Next hardening cycle",
+      "linked_findings": [
+        "HB-DET-006"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "HB-DET-001",
+      "title": "Raw scanner evidence can be copied into shareable HTML/PDF reports without secret redaction",
+      "severity": "high",
+      "confidence": "high",
+      "status": "open",
+      "source_tools": [
+        "manual source review",
+        "normalize_findings.py",
+        "generate_report.py"
+      ],
+      "affected_component": "scanner evidence normalization and report generation",
+      "affected_file": "scripts/normalize_findings.py:103; scripts/generate_report.py:211; scripts/generate_report.py:406",
+      "affected_endpoint": null,
+      "affected_asset": "HTML/PDF security reports generated from scanner exports",
+      "evidence": {
+        "summary": "The generic normalizer assigns the entire scanner item to the normalized evidence field. The report generator then renders the evidence field into HTML and PDF. HTML escaping is present, but no recursive redaction or evidence minimization is applied before report generation.",
+        "observed_code_paths": [
+          "normalize_generic stores evidence: item",
+          "render_html renders finding evidence through html_block",
+          "flatten_for_pdf serializes finding evidence into PDF text"
+        ],
+        "positive_control": "HTML content is escaped, reducing script injection risk. This does not prevent disclosure of sensitive scanner evidence."
+      },
+      "attack_path": "A Burp, Qualys, Sonar, or custom scanner export includes request headers, cookies, bearer tokens, API keys, session identifiers, request bodies, or response snippets. normalize_findings.py copies the raw item into the evidence field. generate_report.py embeds that evidence in a polished report. The report is then shared more broadly than the raw scanner export, leaking sensitive operational details.",
+      "ai_agent_relevance": "The skill explicitly treats scanner output as untrusted input, and the report agent turns that input into downstream deliverables. In an agentic workflow, this expands the blast radius of sensitive scanner evidence unless redaction is deterministic.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "Current AI security guidance treats tool output, scanner output, and report artifacts as sensitive context that can leak credentials or operational details when copied without minimization.",
+        "sources": [
+          {
+            "name": "OWASP Top 10 for LLM and GenAI Apps 2025",
+            "url": "https://genai.owasp.org/llm-top-10/",
+            "relevance": "Sensitive information disclosure and improper output handling are directly relevant to report evidence leakage."
+          },
+          {
+            "name": "NIST AI RMF Generative AI Profile",
+            "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+            "relevance": "Supports governance-grade traceability, risk measurement, and risk management for GenAI outputs."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "Evidence exfiltration through polished reports",
+            "relevance": "Scanner exports commonly contain request headers, tokens, session values, response snippets, and internal hostnames.",
+            "recommended_action": "Add recursive redaction and evidence-minimized report modes before supporting live scanner exports."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Exfiltration and credential access through tool-output handling",
+          "cwe": "CWE-200; CWE-532"
+        },
+        "detection_or_test": "Use fixtures with nested secrets and assert normalized JSON, HTML, and PDF bytes do not contain secret values.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "High"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Sensitive Information Disclosure",
+        "owasp_agentic": "Information Disclosure through Tool and Context Handling",
+        "mitre_atlas": "Credential Access / Exfiltration through tool-output handling",
+        "nist_ai_rmf": "Map, Measure, Manage",
+        "cwe": "CWE-200; CWE-532",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "High",
+        "rationale": "The issue can expose high-value security evidence and credentials, is easy to reproduce with realistic scanner exports, and is amplified by automated report sharing."
+      },
+      "recommended_fix": "Add a recursive redaction layer before storing normalized evidence and before rendering reports. Redact key names and values matching Authorization, Cookie, Set-Cookie, token, secret, password, api_key, bearer, private_key, session, credential, client_secret, and configurable organization patterns. Prefer a safe evidence summary allowlist over storing full raw scanner items by default.",
+      "regression_test": "Create a fixture with nested request and response objects containing Authorization, Cookie, Set-Cookie, api_key, password, bearer token, private key markers, and session IDs. Run normalize_findings.py and generate_report.py, then assert none of the secret values appear in normalized JSON, HTML, or PDF bytes.",
+      "residual_risk": "Some scanner proof data can remain sensitive even after key-based redaction. High-risk reports should carry a classification label and support an evidence-minimized mode."
+    },
+    {
+      "id": "HB-DET-002",
+      "title": "Surface mapper scans generated reports and previous report inputs, polluting later analysis",
+      "severity": "medium",
+      "confidence": "high",
+      "status": "open",
+      "source_tools": [
+        "surface_mapper.py",
+        "manual source review"
+      ],
+      "affected_component": "local attack surface discovery",
+      "affected_file": "scripts/surface_mapper.py:76-92; .gitignore:9",
+      "affected_endpoint": null,
+      "affected_asset": "review evidence quality and finding accuracy",
+      "evidence": {
+        "summary": "DEFAULT_SKIP_DIRS excludes common build and dependency folders but not reports/ or out/. The rerun included generated report HTML, PDF, and report input JSON as if they were source surfaces. The surface counts increased after report generation: mcp rose to 32, authz to 57, and secrets to 55 because prior reports contained those words.",
+        "observed_noise": [
+          "reports/hades-blackwatch-fullstack-review-input.json",
+          "reports/hades-blackwatch-skill-repository-hades-blackwatch-full-stack-security-review.html",
+          "reports/hades-blackwatch-skill-repository-hades-blackwatch-full-stack-security-review.pdf"
+        ],
+        "control_gap": "reports/ is ignored in .gitignore but not skipped by surface_mapper.py."
+      },
+      "attack_path": "Generated reports contain security terminology and possibly sensitive evidence. A later full-stack analysis scans those reports and treats them as current code/docs evidence, producing duplicated findings, stale evidence, or false positives.",
+      "ai_agent_relevance": "Generated reports can become context for subsequent agent runs. If the tool cannot separate primary source from generated evidence, specialist agents may anchor on stale report content rather than current system behavior.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "Agentic review workflows are vulnerable to stale or attacker-shaped context when generated artifacts are re-ingested as if they were primary source evidence.",
+        "sources": [
+          {
+            "name": "OWASP Top 10 for Agentic Applications",
+            "url": "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
+            "relevance": "Agent memory, context poisoning, and tool reliability risks map to stale generated evidence being reused by agents."
+          },
+          {
+            "name": "MITRE ATLAS",
+            "url": "https://atlas.mitre.org/",
+            "relevance": "Provides AI-system threat mapping for poisoning and evasion-adjacent behaviors."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "Generated artifact context poisoning",
+            "relevance": "Reports can contain old findings, keywords, and sensitive context that distort later local scans.",
+            "recommended_action": "Exclude reports and other generated outputs by default; require explicit opt-in when auditing report artifacts."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Data poisoning / evidence manipulation analogue",
+          "cwe": "CWE-703"
+        },
+        "detection_or_test": "Add generated report fixtures and assert surface_mapper.py excludes them unless an explicit include-generated option is used.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "High"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Context/Data Poisoning analogue for review evidence",
+        "owasp_agentic": "Evidence Integrity / Context Poisoning",
+        "mitre_atlas": "Data poisoning and evasion-adjacent evidence manipulation",
+        "nist_ai_rmf": "Measure, Manage",
+        "cwe": "CWE-703",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "Medium",
+        "rationale": "The issue does not directly execute code or expose new data, but it materially degrades the accuracy and repeatability of agentic security reviews."
+      },
+      "recommended_fix": "Add reports/, out/, coverage/, .pytest_cache/, .mypy_cache/, and other generated-output paths to DEFAULT_SKIP_DIRS. Add --include-generated and --exclude options for controlled overrides. Consider reading .gitignore patterns for default exclusions.",
+      "regression_test": "Create reports/generated.html containing token, MCP, credential, and authorization terms. Run surface_mapper.py and assert reports/generated.html is excluded by default. Then run with an explicit include-generated option and assert it appears.",
+      "residual_risk": "Some users may intentionally want to audit report artifacts. That should be explicit and separate from source surface mapping."
+    },
+    {
+      "id": "HB-DET-003",
+      "title": "MCP manifest auditor can under-classify nested permissive tool schemas",
+      "severity": "medium",
+      "confidence": "medium",
+      "status": "open",
+      "source_tools": [
+        "mcp_manifest_audit.py",
+        "manual source review"
+      ],
+      "affected_component": "MCP tool contract audit",
+      "affected_file": "scripts/mcp_manifest_audit.py:68-98",
+      "affected_endpoint": null,
+      "affected_asset": "MCP risk tier assignment and tool safety classification",
+      "evidence": {
+        "summary": "The auditor reads only top-level schema properties for explicit issue generation. It may see nested words through JSON stringification, but it does not recursively report nested free-form parameters, unconstrained object schemas, additionalProperties, arrays of action objects, or weakly constrained nested URL/path/command/body fields.",
+        "positive_control": "The example manifest correctly flags a top-level command parameter as T4.",
+        "gap": "A tool can hide broad authority under a neutral top-level object such as config, request, options, action, or payload."
+      },
+      "attack_path": "An MCP server exposes a tool with a benign top-level schema but nested command, URL, path, headers, body, credential, or action fields. The current auditor may not clearly emit high-risk nested JSON-path issues, causing the orchestrator to underestimate the server's risk tier.",
+      "ai_agent_relevance": "MCP tools are privileged agent boundaries. Under-classifying nested tool authority can make prompt injection or malicious tool metadata more dangerous in a connected agent environment.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "MCP security guidance emphasizes authorization boundaries, SSRF, token handling, local server risk, and scope minimization. Nested schemas can hide exactly the kind of authority that needs strict review.",
+        "sources": [
+          {
+            "name": "Model Context Protocol Security Best Practices",
+            "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+            "relevance": "Covers MCP-specific implementation risks including SSRF, token passthrough, authorization, and local server compromise."
+          },
+          {
+            "name": "OWASP Agentic Skills Top 10",
+            "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+            "relevance": "Skill and tool execution-layer risks map to dangerous hidden capabilities and weak validation."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "Nested dangerous capability hiding",
+            "relevance": "A neutral top-level object can contain nested command, URL, credential, body, or action fields that change the true risk tier.",
+            "recommended_action": "Walk schemas recursively and report exact JSON paths for risky nested fields and permissive object shapes."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Tool abuse via agent capability",
+          "cwe": "CWE-20; CWE-749"
+        },
+        "detection_or_test": "Add nested MCP manifest fixtures with command, URL, headers, body, credential, and additionalProperties paths; assert T4 classification.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "High"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Excessive Agency; Insecure Plugin Design",
+        "owasp_agentic": "Tool Misuse; Agentic Supply Chain",
+        "mitre_atlas": "Tool abuse and execution via agent capability",
+        "nist_ai_rmf": "Map, Measure, Manage",
+        "cwe": "CWE-20; CWE-749",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "Medium",
+        "rationale": "The weakness affects detection quality for potentially high-risk tools. Impact depends on the reviewed MCP manifests and whether live high-privilege MCP tools are connected."
+      },
+      "recommended_fix": "Walk input schemas recursively and report exact JSON paths. Flag additionalProperties true or absent on object-like inputs, nested sensitive parameter names, arrays of action objects, missing required fields, broad string parameters, and URL/path/command-like fields without enums, allowlists, regex constraints, or approval language.",
+      "regression_test": "Add a manifest fixture with inputSchema.properties.config.properties.command, inputSchema.properties.request.properties.url, nested headers/body fields, and additionalProperties true. Assert the auditor returns T4 and reports each nested JSON path.",
+      "residual_risk": "Static manifest checks cannot prove runtime authorization. High-risk MCP tools still need runtime review, allowlists, approval gates, and audit logs."
+    },
+    {
+      "id": "HB-DET-004",
+      "title": "Hades rename changed the normalized finding schema without compatibility notes",
+      "severity": "low",
+      "confidence": "high",
+      "status": "open",
+      "source_tools": [
+        "normalize_findings.py",
+        "manual source review"
+      ],
+      "affected_component": "finding normalization and downstream interoperability",
+      "affected_file": "scripts/normalize_findings.py:127",
+      "affected_endpoint": null,
+      "affected_asset": "normalized findings consumed by reports, CI, or downstream tooling",
+      "evidence": {
+        "summary": "normalize_findings.py now emits schema: hades-blackwatch.findings.v1 after the rename. Existing historical reports, dashboards, or downstream consumers may still expect a previous skill schema, but no compatibility note or alias is documented.",
+        "observed_output": "schema: hades-blackwatch.findings.v1",
+        "legacy_output": "previous skill schema",
+        "expected_output": "schema: hades-blackwatch.findings.v1 with documented migration behavior for older consumers"
+      },
+      "attack_path": "Downstream systems or report consumers route, validate, or store findings based on the schema value. An undocumented schema migration can cause failed validation, incorrect ownership, broken dashboards, or mixed historical data after the skill rename.",
+      "ai_agent_relevance": "Agentic review workflows depend on machine-readable handoffs. Undocumented schema changes weaken provenance and can cause downstream agents or integrations to misinterpret the evidence source.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "Agentic security workflows rely on provenance, source identity, and repeatable machine-readable handoffs. Undocumented schema migrations reduce trust in downstream automation and audit evidence.",
+        "sources": [
+          {
+            "name": "NIST AI RMF Generative AI Profile",
+            "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+            "relevance": "Governance and risk management practices emphasize traceability and lifecycle controls."
+          },
+          {
+            "name": "OWASP Agentic Skills Top 10",
+            "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+            "relevance": "Skill provenance and governance risks apply to reusable agent skill packages."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "Schema compatibility gap",
+            "relevance": "A renamed skill with a new schema can break routing, validation, dashboards, and later agent interpretation if migration behavior is not documented.",
+            "recommended_action": "Document aliases or migration behavior and add a schema regression test."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Defense evasion through tooling inconsistency",
+          "cwe": "CWE-1104"
+        },
+        "detection_or_test": "Assert normalize_findings.py emits hades-blackwatch.findings.v1 or a documented compatibility alias.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "High"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Supply Chain / Model and Tooling Integrity",
+        "owasp_agentic": "Agentic Supply Chain / Tool Contract Drift",
+        "mitre_atlas": "Defense evasion through tooling inconsistency",
+        "nist_ai_rmf": "Map, Measure, Manage",
+        "cwe": "CWE-1104",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "Medium",
+        "rationale": "The issue affects integration integrity rather than direct exploitability. It can still break automated review pipelines and evidence provenance during migration."
+      },
+      "recommended_fix": "Document the Hades Blackwatch schema in references/report-format.md. If backward compatibility is needed, add schema_aliases or schema_version fields for previous skill schemas and explain how old reports should be handled.",
+      "regression_test": "Run normalize_findings.py against examples/scanner-findings.example.json and assert the schema field equals hades-blackwatch.findings.v1.",
+      "residual_risk": "Previously generated reports may still contain old schema identifiers. Migration notes should clarify that old reports are historical artifacts."
+    },
+    {
+      "id": "HB-DET-005",
+      "title": "Documentation describes scanner auto-detection before the registry implementation exists",
+      "severity": "low",
+      "confidence": "high",
+      "status": "open",
+      "source_tools": [
+        "manual docs review"
+      ],
+      "affected_component": "README and documentation accuracy",
+      "affected_file": "README.md:159; README.md:228; README.md:440; docs/index.html:753; docs/index.html:895",
+      "affected_endpoint": null,
+      "affected_asset": "user expectations for scanner integrations",
+      "evidence": {
+        "summary": "README and docs state that scanner backends are detected and that the skill chooses the safest integration path. The roadmap also says scanner_registry.py still needs to be added. The current implementation has a scanner-registry agent role but no executable scanner registry script.",
+        "current_implementation": "Role guidance exists in agents/roles/scanner-registry.md, but scanner_registry.py is roadmap-only.",
+        "impact": "Users may expect automatic detection of Sonar, Burp, Qualys, Semgrep, CodeQL, or Trivy when the current repo mainly supports manual/report-driven workflows."
+      },
+      "attack_path": "A user relies on documentation that implies automated scanner detection, then assumes coverage exists when no scanner backend was actually queried or imported. This can create false assurance in a security review.",
+      "ai_agent_relevance": "Agentic tools should be explicit about what evidence was actually collected. Overstated capability descriptions can cause both humans and agents to over-trust missing scanner coverage.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "Threat-informed security reporting depends on evidence provenance. Overstating scanner or MCP coverage can create false assurance and hide missing controls.",
+        "sources": [
+          {
+            "name": "NIST AI RMF Generative AI Profile",
+            "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+            "relevance": "Supports transparent risk measurement, governance, and lifecycle accountability."
+          },
+          {
+            "name": "OWASP Top 10 for Agentic Applications",
+            "url": "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
+            "relevance": "Agentic tool reliability and overreliance risks are relevant when documentation implies missing scanner coverage."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "False assurance through capability claims",
+            "relevance": "Users may assume Burp, Qualys, Sonar, Semgrep, CodeQL, or Trivy evidence was collected when only local scripts or examples ran.",
+            "recommended_action": "Separate implemented, designed, and roadmap capabilities in documentation and final reports."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Defense evasion via false assurance",
+          "cwe": "CWE-1059"
+        },
+        "detection_or_test": "Add a docs consistency check that compares capability claims to implemented scripts and report evidence.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "Medium"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Overreliance / Supply Chain Tooling Gap",
+        "owasp_agentic": "Tool Reliability / Coverage Gap",
+        "mitre_atlas": "Defense evasion via false assurance",
+        "nist_ai_rmf": "Govern, Map, Measure",
+        "cwe": "CWE-1059",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "Low",
+        "rationale": "This is a documentation and expectation risk, not a direct vulnerability. It matters because the skill is intended to drive security decisions."
+      },
+      "recommended_fix": "Adjust wording to say Hades Blackwatch is designed to support scanner detection and currently supports local scripts, report ingestion, examples, and role guidance. Keep auto-detection language only after scanner_registry.py exists and is tested.",
+      "regression_test": "Add a docs consistency checklist or test that verifies README capability claims match implemented scripts and roadmap status.",
+      "residual_risk": "Even after scanner registry implementation, reports should always list which backends actually ran, which were skipped, and why."
+    },
+    {
+      "id": "HB-DET-006",
+      "title": "Smoke checks are manual and not enforced as automated regression tests",
+      "severity": "low",
+      "confidence": "high",
+      "status": "open",
+      "source_tools": [
+        "manual source review",
+        "local script smoke tests"
+      ],
+      "affected_component": "test and release assurance",
+      "affected_file": "scripts/generate_report.py; scripts/normalize_findings.py; scripts/mcp_manifest_audit.py; scripts/surface_mapper.py",
+      "affected_endpoint": null,
+      "affected_asset": "future reliability of security review outputs",
+      "evidence": {
+        "summary": "Local smoke checks passed for skill validation, surface mapping, MCP manifest audit, prompt pack generation, normalization, and report generation. However, these checks are not codified as a test suite or CI gate.",
+        "successful_checks": [
+          "quick_validate.py returned Skill is valid",
+          "mcp_manifest_audit.py classified run_shell_command as T4",
+          "normalize_findings.py produced one normalized finding",
+          "generate_report.py produced HTML and PDF outputs"
+        ],
+        "gap": "No committed tests assert redaction, report generation, schema name, surface exclusion, nested MCP schemas, or PDF/HTML output integrity."
+      },
+      "attack_path": "A future change regresses redaction, report escaping, schema names, surface exclusions, or MCP risk classification. Without automated tests, the regression may be discovered only after a report is shared or a review misses a risky tool.",
+      "ai_agent_relevance": "Security skills become reusable agent infrastructure. Regression in the skill can mislead future security reviews and downstream agent decisions.",
+      "threat_intel": {
+        "as_of": "2026-05-28",
+        "summary": "Reusable AI security skills become supply-chain components. Automated regression gates are needed so redaction, MCP risk classification, schema identity, and report rendering do not silently weaken over time.",
+        "sources": [
+          {
+            "name": "OWASP Agentic Skills Top 10",
+            "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+            "relevance": "Reusable skills, plugins, and agent execution layers require governance, validation, and supply-chain controls."
+          },
+          {
+            "name": "NIST AI RMF Generative AI Profile",
+            "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+            "relevance": "Supports lifecycle risk management and repeatable controls for GenAI systems."
+          }
+        ],
+        "signals": [
+          {
+            "theme": "Agentic skill supply-chain regression",
+            "relevance": "Security review tooling can become a weak link if its own controls are not tested before integrations expand.",
+            "recommended_action": "Create tests for redaction, report output, schema name, surface exclusions, and recursive MCP schema classification; run them in CI."
+          }
+        ],
+        "mapped_techniques": {
+          "mitre_atlas": "Defense evasion through tooling weakness",
+          "cwe": "CWE-1059"
+        },
+        "detection_or_test": "Add unittest or pytest coverage plus a CI workflow for the security-critical script paths.",
+        "freshness": "Checked against official sources on 2026-05-28",
+        "confidence": "High"
+      },
+      "framework_mappings": {
+        "owasp_llm": "Supply Chain Vulnerabilities",
+        "owasp_agentic": "Agentic Supply Chain / Tool Reliability",
+        "mitre_atlas": "Defense evasion through tooling weakness",
+        "nist_ai_rmf": "Measure, Manage",
+        "cwe": "CWE-1059",
+        "cve": null
+      },
+      "score": {
+        "system": "AIVSS",
+        "value": "Low",
+        "rationale": "This is an assurance gap, but it affects security-critical review tooling."
+      },
+      "recommended_fix": "Add a standard-library unittest or pytest suite for redaction, normalization schema, HTML escaping, PDF generation, surface exclusions, and recursive MCP schema risk classification. Add a CI workflow to run skill validation and tests on every change.",
+      "regression_test": "Create tests/test_normalize_findings.py, tests/test_generate_report.py, tests/test_mcp_manifest_audit.py, and tests/test_surface_mapper.py with the current examples plus security fixtures.",
+      "residual_risk": "Automated tests should be supplemented by manual review for new scanner adapters, new MCP integrations, and report template changes."
+    }
+  ]
+}

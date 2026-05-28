@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "id": "SONAR-001",
+      "title": "Server-side request forgery sink receives model-controlled URL",
+      "severity": "high",
+      "confidence": "high",
+      "file": "src/tools/fetch_url.ts",
+      "component": "agent web fetch tool",
+      "recommendation": "Require an outbound host allowlist and block private IP ranges before issuing requests."
+    }
+  ]
+}

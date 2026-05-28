@@ -1,0 +1,125 @@
+version: "0.1.0"
+skill: "hades-blackwatch"
+
+protocol:
+  handoff_format: "references/agent-stack.md"
+  report_format: "references/report-format.md"
+  mcp_policy: "MCP is escalation-only. Agents must use local code, configs, imported reports, and read-only evidence first; call MCP only when necessary evidence cannot be obtained otherwise or when explicitly requested."
+
+modes:
+  full-stack:
+    description: "Complete AI application, agent, MCP, code, scanner, and governance review."
+    agents:
+      - security-orchestrator
+      - latest-threat-intel
+      - ai-threat-model
+      - mcp-server-auditor
+      - scanner-registry
+      - prompt-injection
+      - agent-tool-security
+      - rag-data-security
+      - secure-code-review
+      - supply-chain
+      - finding-correlator
+      - attack-visualization
+      - test-builder
+      - report
+
+  mcp-audit:
+    description: "Focused review of MCP servers, tools, resources, prompts, auth, and runtime risk."
+    agents:
+      - security-orchestrator
+      - latest-threat-intel
+      - mcp-server-auditor
+      - agent-tool-security
+      - finding-correlator
+      - attack-visualization
+      - report
+
+  scanner-evidence:
+    description: "Use scanner backends and imported reports to produce normalized security findings."
+    agents:
+      - security-orchestrator
+      - latest-threat-intel
+      - scanner-registry
+      - secure-code-review
+      - supply-chain
+      - finding-correlator
+      - attack-visualization
+      - report
+
+  report-generation:
+    description: "Generate detailed HTML and PDF security reports from normalized findings and review metadata."
+    agents:
+      - latest-threat-intel
+      - attack-visualization
+      - report
+
+  ai-red-team:
+    description: "Prompt injection, agent misuse, RAG/context poisoning, and automated AI security testing."
+    agents:
+      - security-orchestrator
+      - latest-threat-intel
+      - prompt-injection
+      - agent-tool-security
+      - rag-data-security
+      - attack-visualization
+      - test-builder
+      - report
+
+agents:
+  security-orchestrator:
+    file: "agents/roles/security-orchestrator.md"
+    risk_authority: "final-verdict"
+
+  latest-threat-intel:
+    file: "agents/roles/latest-threat-intel.md"
+    risk_authority: "evidence"
+
+  ai-threat-model:
+    file: "agents/roles/ai-threat-model.md"
+    risk_authority: "candidate-findings"
+
+  mcp-server-auditor:
+    file: "agents/roles/mcp-server-auditor.md"
+    risk_authority: "candidate-findings"
+
+  scanner-registry:
+    file: "agents/roles/scanner-registry.md"
+    risk_authority: "evidence"
+
+  prompt-injection:
+    file: "agents/roles/prompt-injection.md"
+    risk_authority: "candidate-findings"
+
+  agent-tool-security:
+    file: "agents/roles/agent-tool-security.md"
+    risk_authority: "candidate-findings"
+
+  rag-data-security:
+    file: "agents/roles/rag-data-security.md"
+    risk_authority: "candidate-findings"
+
+  secure-code-review:
+    file: "agents/roles/secure-code-review.md"
+    risk_authority: "candidate-findings"
+
+  supply-chain:
+    file: "agents/roles/supply-chain.md"
+    risk_authority: "candidate-findings"
+
+  finding-correlator:
+    file: "agents/roles/finding-correlator.md"
+    risk_authority: "severity-recommendation"
+
+  attack-visualization:
+    file: "agents/roles/attack-visualization.md"
+    risk_authority: "presentation"
+
+  test-builder:
+    file: "agents/roles/test-builder.md"
+    risk_authority: "verification"
+
+  report:
+    file: "agents/roles/report.md"
+    risk_authority: "presentation"

@@ -1,0 +1,31 @@
+{
+  "tools": [
+    {
+      "name": "read_sonar_issues",
+      "description": "Read SonarQube issues for an allowlisted project.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_key": {
+            "type": "string",
+            "description": "Allowlisted SonarQube project key."
+          }
+        },
+        "required": ["project_key"]
+      }
+    },
+    {
+      "name": "run_shell_command",
+      "description": "Execute a local shell command.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          }
+        },
+        "required": ["command"]
+      }
+    }
+  ]
+}

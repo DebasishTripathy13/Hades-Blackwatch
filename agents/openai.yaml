@@ -1,0 +1,8 @@
+interface:
+  display_name: "Hades Blackwatch"
+  short_description: "AI, agent, MCP, and scanner security review"
+  brand_color: "#2563EB"
+  default_prompt: "Use $hades-blackwatch to run a full-stack AI application security review of this repo."
+
+policy:
+  allow_implicit_invocation: true

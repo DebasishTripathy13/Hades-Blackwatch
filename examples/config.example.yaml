@@ -1,0 +1,66 @@
+mode: full-stack
+target:
+  type: ai-agent
+  environment: local
+  authorized: false
+
+frameworks:
+  taxonomy:
+    - owasp-llm-top-10
+    - owasp-agentic-top-10
+  scoring: owasp-aivss
+  threat_mapping: mitre-atlas
+  governance: nist-ai-rmf-genai-profile
+
+scanner_backends:
+  sonar:
+    mode: native_mcp
+    risk_tier: T2
+    allowed_actions:
+      - read_quality_gate
+      - read_issues
+      - analyze_snippet
+
+  burp_dast:
+    mode: api_wrapped_mcp
+    api: graphql
+    risk_tier: T3
+    allowed_actions:
+      - read_sites
+      - read_issues
+      - read_reports
+    approval_required:
+      - start_scan
+
+  qualys:
+    mode: api_wrapped_mcp
+    risk_tier: T3
+    allowed_actions:
+      - read_assets
+      - read_vulnerabilities
+      - read_reports
+    approval_required:
+      - launch_scan
+      - create_report
+
+  semgrep:
+    mode: cli_bridge
+    risk_tier: T1
+    allowed_actions:
+      - run_scan
+      - read_sarif
+
+  codeql:
+    mode: cli_or_github_api
+    risk_tier: T1
+    allowed_actions:
+      - run_query
+      - read_alerts
+
+  trivy:
+    mode: cli_bridge
+    risk_tier: T1
+    allowed_actions:
+      - scan_filesystem
+      - scan_image
+      - read_sarif

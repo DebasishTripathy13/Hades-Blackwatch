@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hades Blackwatch Detailed Full-Stack Analysis</title>
+  <style>
+    :root {
+      --ink: #101828;
+      --muted: #667085;
+      --soft: #f8fafc;
+      --panel: #ffffff;
+      --line: #d9dee8;
+      --blue: #1d4ed8;
+      --blue-dark: #101828;
+      --teal: #0f766e;
+      --critical: #991b1b;
+      --critical-soft: #fee2e2;
+      --high: #b45309;
+      --high-soft: #fef3c7;
+      --medium: #a16207;
+      --medium-soft: #fef3c7;
+      --low: #047857;
+      --low-soft: #d1fae5;
+      --informational: #475569;
+      --informational-soft: #e2e8f0;
+      --shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: #eef2f7; font: 14px/1.6 Arial, Helvetica, sans-serif; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .layout { display: grid; grid-template-columns: 292px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 26px 20px; background: var(--blue-dark); color: #e5e7eb; }
+    .mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #0f766e); color: #fff; font-weight: 800; margin-bottom: 12px; }
+    .sidebar h1 { margin: 0; font-size: 22px; }
+    .sidebar p { color: #aab3c2; margin: 6px 0 22px; }
+    .nav-title { margin: 22px 0 8px; color: #aab3c2; text-transform: uppercase; font-size: 12px; letter-spacing: 0.04em; }
+    .risk-link { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 8px; align-items: start; padding: 10px; border-radius: 8px; color: #e5e7eb; border: 1px solid transparent; }
+    .risk-link:hover { background: #1d2939; text-decoration: none; border-color: #344054; }
+    .risk-link span { color: #aab3c2; font-size: 12px; }
+    .risk-link strong { font-size: 13px; line-height: 1.35; }
+    .risk-link .badge { grid-column: 2; width: fit-content; }
+    .section-nav { display: grid; gap: 6px; }
+    .quick-link { color: #dbeafe; padding: 7px 10px; border-radius: 8px; font-size: 13px; }
+    .quick-link:hover { background: #1d2939; text-decoration: none; }
+    .content { min-width: 0; }
+    .hero { padding: 44px 56px 34px; color: #fff; background: radial-gradient(circle at top right, rgba(15,118,110,0.55), transparent 32%), linear-gradient(135deg, #111827, #172554 62%, #0f766e); }
+    .hero-inner { max-width: 1180px; margin: 0 auto; }
+    .eyebrow { margin: 0 0 10px; color: #bfdbfe; text-transform: uppercase; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; }
+    .hero h2 { margin: 0; max-width: 920px; font-size: 38px; line-height: 1.12; }
+    .hero p { max-width: 900px; color: #dbeafe; font-size: 17px; }
+    .hero-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+    .hero-meta div { border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.09); border-radius: 8px; padding: 12px; }
+    .hero-meta span { display: block; color: #bfdbfe; font-size: 12px; text-transform: uppercase; }
+    .hero-meta strong { display: block; margin-top: 4px; font-size: 14px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 32px 56px 72px; }
+    section { scroll-margin-top: 24px; }
+    h2 { font-size: 25px; margin: 34px 0 14px; }
+    h3 { font-size: 20px; margin: 0; }
+    h4 { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 18px 0 6px; }
+    p { margin: 7px 0 12px; }
+    ul { margin: 8px 0 14px; padding-left: 20px; }
+    pre { margin: 8px 0 14px; white-space: pre-wrap; overflow-wrap: anywhere; background: #111827; color: #e5e7eb; border-radius: 8px; padding: 14px; font-size: 12px; line-height: 1.55; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 28px; background: #fff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 8px 24px rgba(15,23,42,0.04); }
+    th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef2f7; color: #344054; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:last-child td { border-bottom: 0; }
+    .summary { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr); gap: 18px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; box-shadow: var(--shadow); }
+    .insight-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 14px 0 24px; }
+    .insight-card, .recommendation-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 8px 24px rgba(15,23,42,0.04); }
+    .insight-card.threat { border-left: 5px solid var(--teal); }
+    .insight-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+    .insight-head h3 { font-size: 17px; }
+    .status-pill, .tag, .priority { display: inline-flex; align-items: center; min-height: 24px; border-radius: 999px; padding: 3px 9px; background: #eef2ff; color: #1e3a8a; font-size: 12px; font-weight: 800; }
+    .priority { background: #ecfdf5; color: #065f46; }
+    .tag-list, .meta-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .source-list a { font-weight: 800; }
+    .recommendation-grid { display: grid; gap: 14px; margin: 14px 0 26px; }
+    .recommendation-card { border-left: 5px solid var(--blue); }
+    .recommendation-card h3 { margin-top: 10px; font-size: 17px; line-height: 1.35; }
+    .score-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .score-card { background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--informational); border-radius: 8px; padding: 14px; }
+    .score-card span { display: block; color: var(--muted); }
+    .score-card strong { display: block; font-size: 30px; line-height: 1; margin-top: 8px; }
+    .score-card.critical { border-top-color: var(--critical); }
+    .score-card.high { border-top-color: var(--high); }
+    .score-card.medium { border-top-color: var(--medium); }
+    .score-card.low { border-top-color: var(--low); }
+    .mini-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .mini-grid section, .finding-body section { background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+    .finding { background: #fff; border: 1px solid var(--line); border-left: 7px solid var(--informational); border-radius: 8px; padding: 18px; margin: 18px 0 28px; box-shadow: var(--shadow); }
+    .finding.critical { border-left-color: var(--critical); }
+    .finding.high { border-left-color: var(--high); }
+    .finding.medium { border-left-color: var(--medium); }
+    .finding.low { border-left-color: var(--low); }
+    .finding-head { display: flex; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    .finding-badges { text-align: right; min-width: 190px; }
+    .finding-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+    .finding-body .wide { grid-column: 1 / -1; }
+    .finding-body .fix { background: #ecfdf5; border-color: #a7f3d0; }
+    .finding-body .threat-note { background: #f0fdfa; border-color: #99f6e4; }
+    .finding-body .attack-visual { background: #fff7ed; border-color: #fed7aa; }
+    .flow-diagram { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 14px 0; counter-reset: flow; }
+    .flow-step { position: relative; min-height: 190px; border: 1px solid #fed7aa; border-radius: 8px; background: #fffaf5; padding: 13px; }
+    .flow-step::after { content: ""; position: absolute; top: 28px; right: -10px; width: 10px; height: 2px; background: #f97316; }
+    .flow-step:last-child::after { display: none; }
+    .flow-step strong { display: block; margin: 7px 0 5px; color: #9a3412; }
+    .flow-step p { font-size: 13px; line-height: 1.45; }
+    .step-number { display: inline-grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: #f97316; color: #fff; font-size: 12px; font-weight: 800; }
+    .tag.danger { background: #fef2f2; color: #991b1b; }
+    .safe-note { color: #7c2d12; font-weight: 700; }
+    .badge { display: inline-flex; align-items: center; min-height: 24px; border-radius: 999px; padding: 3px 9px; color: #fff; background: var(--informational); font-size: 12px; font-weight: 800; }
+    .badge.critical { background: var(--critical); }
+    .badge.high { background: var(--high); }
+    .badge.medium { background: var(--medium); }
+    .badge.low { background: var(--low); }
+    .badge.informational { background: var(--informational); }
+    .badge.confidence { background: #344054; margin-left: 4px; }
+    .kicker { color: var(--muted); text-transform: uppercase; font-size: 12px; margin: 0 0 5px; font-weight: 700; }
+    .empty { color: var(--muted); font-style: italic; }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .hero, main { padding-left: 24px; padding-right: 24px; }
+      .hero-meta, .score-grid, .summary, .mini-grid, .finding-body, .insight-grid, .flow-diagram { grid-template-columns: 1fr; }
+      .finding-body .wide { grid-column: auto; }
+      .flow-step::after { display: none; }
+    }
+    @media print {
+      body { background: #fff; }
+      .layout { display: block; }
+      .sidebar { display: none; }
+      .hero { color: #111827; background: #fff; border-bottom: 1px solid var(--line); }
+      .hero p, .eyebrow { color: #475569; }
+      main, .hero { padding: 24px 32px; }
+      .panel, .finding, table { box-shadow: none; }
+      .finding { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="mark">HB</div>
+      <h1>Hades Blackwatch</h1>
+      <p>Security review report</p>
+      <div class="nav-title">Sections</div>
+      <nav class="section-nav">
+        <a class="quick-link" href="#summary">Executive summary</a>
+        <a class="quick-link" href="#scope">Scope</a>
+        <a class="quick-link" href="#methodology">Methodology</a>
+        <a class="quick-link" href="#skills">Skill coverage</a>
+        <a class="quick-link" href="#threat-intel">Threat intel</a>
+        <a class="quick-link" href="#recommendations">Recommendations</a>
+        <a class="quick-link" href="#findings">Detailed findings</a>
+        <a class="quick-link" href="#roadmap">Roadmap</a>
+      </nav>
+      <div class="nav-title">Top Risks</div>
+      <a class="risk-link" href="#hb-det-001"><span>HB-DET-001</span><strong>Raw scanner evidence can be copied into shareable HTML/PDF reports without secret redaction</strong><span class="badge high">High</span></a><a class="risk-link" href="#hb-det-003"><span>HB-DET-003</span><strong>MCP manifest auditor can under-classify nested permissive tool schemas</strong><span class="badge medium">Medium</span></a><a class="risk-link" href="#hb-det-002"><span>HB-DET-002</span><strong>Surface mapper scans generated reports and previous report inputs, polluting later analysis</strong><span class="badge medium">Medium</span></a><a class="risk-link" href="#hb-det-005"><span>HB-DET-005</span><strong>Documentation describes scanner auto-detection before the registry implementation exists</strong><span class="badge low">Low</span></a><a class="risk-link" href="#hb-det-004"><span>HB-DET-004</span><strong>Hades rename changed the normalized finding schema without compatibility notes</strong><span class="badge low">Low</span></a><a class="risk-link" href="#hb-det-006"><span>HB-DET-006</span><strong>Smoke checks are manual and not enforced as automated regression tests</strong><span class="badge low">Low</span></a>
+    </aside>
+    <div class="content">
+      <header class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">Internal - Version 2.2</p>
+          <h2>Hades Blackwatch Detailed Full-Stack Analysis</h2>
+          <p>Request changes: high-risk issues require remediation before approval.</p>
+          <div class="hero-meta">
+            <div><span>Target</span><strong>Hades Blackwatch Skill Repository</strong></div>
+            <div><span>Date</span><strong>2026-05-28</strong></div>
+            <div><span>Author</span><strong>Hades Blackwatch</strong></div>
+            <div><span>Risk Posture</span><strong>Elevated</strong></div>
+          </div>
+        </div>
+      </header>
+      <main>
+        <section class="summary" id="summary">
+          <div class="panel">
+            <h2>Executive Summary</h2>
+            <p><strong>Verdict:</strong> Request changes: high-risk issues require remediation before approval.</p>
+            <p><strong>Risk posture:</strong> Elevated based on 6 normalized finding(s).</p>
+          </div>
+          <div class="panel">
+            <h2>Severity</h2>
+            <div class="score-grid">
+        <div class="score-card critical">
+          <span>Critical</span>
+          <strong>0</strong>
+        </div>
+        
+        <div class="score-card high">
+          <span>High</span>
+          <strong>1</strong>
+        </div>
+        
+        <div class="score-card medium">
+          <span>Medium</span>
+          <strong>2</strong>
+        </div>
+        
+        <div class="score-card low">
+          <span>Low</span>
+          <strong>3</strong>
+        </div>
+        
+        <div class="score-card informational">
+          <span>Informational</span>
+          <strong>0</strong>
+        </div>
+        </div>
+          </div>
+        </section>
+
+        <section id="scope">
+          <h2>Scope and Authorization</h2>
+          <div class="mini-grid">
+            <section><h4>Environment</h4><p>local repository and generated documentation/report artifacts</p></section>
+            <section><h4>Access Level</h4><p>source code, docs, examples, local script execution, generated report artifacts</p></section>
+            <section><h4>Authorized</h4><p>True</p></section>
+            <section><h4>Excluded</h4><ul><li>live MCP server calls</li><li>network-based scanner integrations</li><li>third-party package vulnerability lookups</li><li>active tests against external applications</li><li>production deployment or installation review</li></ul></section>
+          </div>
+          <div class="panel"><h4>Included</h4><ul><li>SKILL.md full-stack workflow</li><li>agent manifest and specialist role files</li><li>MCP escalation-only policy</li><li>scanner normalization pipeline</li><li>MCP manifest audit pipeline</li><li>surface mapping pipeline</li><li>prompt attack pack generation</li><li>HTML/PDF report generation</li><li>README and docs/index.html</li><li>example scanner and report inputs</li></ul></div>
+        </section>
+
+        <section id="methodology">
+          <h2>Methodology</h2>
+          <div class="mini-grid">
+            <section><h4>Frameworks</h4><ul><li>OWASP LLM Top 10</li><li>OWASP Agentic Top 10</li><li>OWASP Agentic Skills Top 10</li><li>OWASP AIVSS</li><li>MITRE ATLAS</li><li>NIST AI RMF GenAI Profile</li><li>OWASP Web/API Top 10 and CWE for conventional appsec mapping</li></ul></section>
+            <section><h4>Agents Used</h4><ul><li>Security Orchestrator</li><li>Latest Threat Intel</li><li>AI Threat Model</li><li>MCP Server Auditor</li><li>Scanner Registry</li><li>Prompt Injection</li><li>Agent Tool Security</li><li>RAG and Data Security</li><li>Secure Code Review</li><li>Supply Chain</li><li>Finding Correlator</li><li>Test Builder</li><li>Report</li></ul></section>
+            <section><h4>Evidence Sources</h4><ul><li>surface_mapper.py local run</li><li>mcp_manifest_audit.py local run</li><li>normalize_findings.py local run</li><li>prompt_attack_pack.py local run</li><li>generate_report.py local run</li><li>manual source review</li></ul></section>
+            <section><h4>MCP Policy</h4><p>No live MCP calls were used. The MCP necessity test did not pass because local source, docs, examples, generated artifacts, and bundled scripts were sufficient.</p></section>
+          </div>
+        </section>
+
+        <section id="skills">
+          <h2>Skill Coverage and Specialist Notes</h2>
+          <p>This detailed review is personalized for the Hades Blackwatch skill repository. The specialist notes separate the agents that materially contributed from agents whose domain was checked but not deeply exercised because the repo is a local skill/tooling package rather than a deployed AI application.</p><div class="insight-grid">
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Security Orchestrator</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Scope, authorization, MCP necessity, final severity, and report structure</p>
+              <h4>Coverage</h4>
+              <p>Kept the review local and source-driven, avoided unnecessary MCP calls, and prioritized six findings by report-leakage, evidence integrity, MCP audit depth, schema migration compatibility, documentation accuracy, and tests.</p>
+              <p>Keep this role as the default entry point for full-stack review so every generated report explains what was actually tested and what was not.</p>
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Latest Threat Intel Agent</h3>
+                <span class="status-pill">Used for report refresh</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Current OWASP, MITRE, NIST, and MCP guidance relevant to skills, agent tools, scanner evidence, and MCP boundaries</p>
+              <h4>Coverage</h4>
+              <p>Added dated threat-intelligence signals and official source links so the report explains why redaction, MCP least privilege, evidence provenance, and governance controls matter for this repo.</p>
+              <p>Run this agent when reports claim current framework coverage, CVEs, vendor tool behavior, or external threat activity.</p>
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>AI Threat Model Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Trust boundaries between prompts, local scripts, generated reports, scanner evidence, and future MCP tools</p>
+              <h4>Coverage</h4>
+              <p>Identified the main local attack paths: untrusted scanner evidence flowing into reports, generated reports polluting future analysis, and MCP schema under-classification.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>MCP Server Auditor</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>MCP escalation policy and manifest risk-tier analysis</p>
+              <h4>Coverage</h4>
+              <p>Validated that no live MCP call was needed and found that nested tool schemas need recursive inspection before real Burp, Qualys, Sonar, or custom MCP adapters are trusted.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Scanner Registry Agent</h3>
+                <span class="status-pill">Partially covered</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Scanner backend claims, evidence ingestion, and auto-detection expectations</p>
+              <h4>Coverage</h4>
+              <p>Confirmed report ingestion and local scripts exist, while scanner auto-detection remains roadmap-only and should be described that way until implemented.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Prompt Injection Agent</h3>
+                <span class="status-pill">Scoped</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Prompt and report-content poisoning paths</p>
+              <h4>Coverage</h4>
+              <p>No live model target was present, but generated artifacts and scanner evidence were treated as untrusted context that can influence later agent runs.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Agent Tool Security Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Tool permissions, evidence-to-report flow, and state-changing MCP policy</p>
+              <h4>Coverage</h4>
+              <p>Mapped the most important tool risks to evidence disclosure, MCP authority classification, and approval boundaries for future scanner adapters.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>RAG and Data Security Agent</h3>
+                <span class="status-pill">Low relevance</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Retrieved content and data-store exposure</p>
+              <h4>Coverage</h4>
+              <p>The repository does not implement a RAG runtime, but the same context-poisoning concern appears in generated reports being re-ingested by later local scans.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Secure Code Review Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Python scripts, JSON normalization, HTML/PDF rendering, and local workflow integrity</p>
+              <h4>Coverage</h4>
+              <p>Found redaction, generated-artifact scanning, schema migration, and missing automated test risks.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Supply Chain Agent</h3>
+                <span class="status-pill">Scoped</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Skill, script, schema, and scanner-adapter supply-chain integrity</p>
+              <h4>Coverage</h4>
+              <p>Highlighted schema migration compatibility and future scanner-adapter expectations; live package vulnerability lookup was excluded from this local review.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Finding Correlator</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Deduplication, severity calibration, and root-cause grouping</p>
+              <h4>Coverage</h4>
+              <p>Grouped the findings into three practical themes: sensitive evidence handling, evidence quality/provenance, and implementation-to-documentation alignment.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Test Builder</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>Regression tests, fixtures, and release gates</p>
+              <h4>Coverage</h4>
+              <p>Converted each finding into a concrete test or checklist item, with emphasis on redaction, surface exclusion, recursive MCP schema checks, schema identity, and CI coverage.</p>
+              
+            </article>
+            
+            <article class="insight-card">
+              <div class="insight-head">
+                <h3>Report Agent</h3>
+                <span class="status-pill">Used</span>
+              </div>
+              <h4>Focus</h4>
+              <p>HTML/PDF deliverables, personalized recommendations, threat intel, and audit-ready detail</p>
+              <h4>Coverage</h4>
+              <p>Generated the upgraded report structure with first-class skill coverage, source-linked threat intelligence, and target-specific recommendations.</p>
+              
+            </article>
+            </div>
+        </section>
+
+        <section id="threat-intel">
+          <h2>Threat Intelligence</h2>
+          <p class="kicker">As of 2026-05-28</p><p>The current threat context for Hades Blackwatch centers on untrusted evidence flowing through agentic review pipelines, MCP/tool authority boundaries, skill and adapter supply-chain integrity, and governance-grade traceability. These signals are mapped to the local findings instead of being generic framework text.</p><div class="insight-grid">
+            <article class="insight-card threat">
+              <h3>Scanner and tool output is hostile evidence until minimized</h3>
+              <h4>Why It Matters</h4>
+              <p>OWASP LLM guidance continues to emphasize sensitive information disclosure and improper output handling. For this repo, the practical risk is raw Burp, Qualys, Sonar, Semgrep, CodeQL, Trivy, or custom JSON evidence being copied into polished reports.</p>
+              <h4>Recommended Action</h4>
+              <p>Add recursive redaction before normalization and rendering, then make report generation tests assert that secrets never survive into HTML or PDF bytes.</p>
+              <p class="tag-list"><span class="tag">Linked: HB-DET-001</span></p>
+            </article>
+            
+            <article class="insight-card threat">
+              <h3>MCP security depends on least privilege and precise authorization boundaries</h3>
+              <h4>Why It Matters</h4>
+              <p>MCP security guidance calls out token passthrough, SSRF, local server compromise, session handling, and scope minimization. For Hades Blackwatch, this makes recursive manifest inspection and escalation-only MCP use important before connecting Burp, Qualys, Sonar, or internal scanners.</p>
+              <h4>Recommended Action</h4>
+              <p>Upgrade nested schema analysis, require risk-tier evidence for every MCP tool, and keep live MCP calls behind the necessity test.</p>
+              <p class="tag-list"><span class="tag">Linked: HB-DET-003, HB-DET-005</span></p>
+            </article>
+            
+            <article class="insight-card threat">
+              <h3>Generated reports can become context poisoning in later agent runs</h3>
+              <h4>Why It Matters</h4>
+              <p>Agentic systems are sensitive to stale or attacker-shaped context. The local surface mapper currently treats reports as review evidence, which can anchor later analysis on old findings and inflated keyword counts.</p>
+              <h4>Recommended Action</h4>
+              <p>Exclude generated report paths by default and require explicit opt-in when report artifacts themselves are the audit target.</p>
+              <p class="tag-list"><span class="tag">Linked: HB-DET-002</span></p>
+            </article>
+            
+            <article class="insight-card threat">
+              <h3>Skill supply-chain integrity needs stable schemas and regression gates</h3>
+              <h4>Why It Matters</h4>
+              <p>OWASP Agentic Skills and NIST AI RMF style governance both push toward provenance, traceability, and repeatable controls. Undocumented schema migration and manual-only smoke tests weaken downstream trust in this skill package.</p>
+              <h4>Recommended Action</h4>
+              <p>Document schema migration behavior and add automated tests plus CI before new adapters are added.</p>
+              <p class="tag-list"><span class="tag">Linked: HB-DET-004, HB-DET-006</span></p>
+            </article>
+            </div><h3>Sources</h3><ul class="source-list"><li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM and GenAI Apps 2025</a> - Prompt injection, sensitive information disclosure, improper output handling, excessive agency, and vector/embedding risks.</li><li><a href="https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/">OWASP Top 10 for Agentic Applications</a> - Agent goal hijack, tool misuse, identity and privilege abuse, agentic supply chain, memory/context poisoning, and inter-agent communication risk.</li><li><a href="https://owasp.org/www-project-agentic-skills-top-10/">OWASP Agentic Skills Top 10</a> - Skill/plugin execution-layer risks such as malicious skills, over-privilege, insecure metadata, weak isolation, poor scanning, and governance gaps.</li><li><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">Model Context Protocol Security Best Practices</a> - MCP confused deputy, token passthrough, SSRF, session hijacking, local server compromise, and scope minimization.</li><li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework and GenAI Profile</a> - Governance and lifecycle risk management for generative AI systems.</li><li><a href="https://atlas.mitre.org/">MITRE ATLAS</a> - Threat-informed mapping for adversarial tactics and techniques against AI-enabled systems.</li></ul>
+        </section>
+
+        <section id="recommendations">
+          <h2>Personalized Recommendations for Hades Blackwatch Skill Repository</h2>
+          <p>These actions are tailored to the target, authorization model, actual evidence sources, and the current finding set.</p>
+          <div class="recommendation-grid">
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">High</span>
+                <span class="status-pill">0-7 days</span>
+              </div>
+              <h3>Make evidence redaction the next release gate before this skill is used on real scanner exports.</h3>
+              <p>Hades Blackwatch is designed to ingest Burp, Qualys, Sonar, Semgrep, CodeQL, Trivy, and custom evidence. Without deterministic minimization, the report generator can turn private scanner data into a broadly shared HTML/PDF artifact.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Security tooling owner</span>
+                <span class="tag">Findings: HB-DET-001</span>
+              </div>
+            </article>
+            
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">Medium</span>
+                <span class="status-pill">1 sprint</span>
+              </div>
+              <h3>Keep generated reports out of default source mapping so later reviews stay anchored to primary evidence.</h3>
+              <p>This repository generates rich security reports under reports/. Letting future scans read those files as source evidence can inflate surface counts and reintroduce stale findings.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Security tooling owner</span>
+                <span class="tag">Findings: HB-DET-002</span>
+              </div>
+            </article>
+            
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">Medium</span>
+                <span class="status-pill">1 sprint</span>
+              </div>
+              <h3>Upgrade MCP manifest auditing before connecting live Burp, Qualys, Sonar, or internal scanner MCP servers.</h3>
+              <p>The skill&#x27;s strategy is MCP only when absolutely needed. That policy is strongest when the auditor can see nested command, URL, credential, body, header, and action fields before a tool is trusted.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Agent platform / MCP owner</span>
+                <span class="tag">Findings: HB-DET-003</span>
+              </div>
+            </article>
+            
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">Medium</span>
+                <span class="status-pill">1 sprint</span>
+              </div>
+              <h3>Document the normalized finding schema migration before downstream integrations depend on it.</h3>
+              <p>The skill now emits the Hades Blackwatch schema after the rename, but downstream consumers may still have older Cerberus-era expectations. A migration note keeps reports, dashboards, and future agents aligned.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Integration owner</span>
+                <span class="tag">Findings: HB-DET-004</span>
+              </div>
+            </article>
+            
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">Low</span>
+                <span class="status-pill">Next hardening cycle</span>
+              </div>
+              <h3>Adjust README and docs language so scanner detection is described as designed support until the registry script exists.</h3>
+              <p>The skill should feel powerful, but security users need exact evidence. Capability wording should distinguish implemented scripts, report ingestion, role guidance, and roadmap work.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Documentation owner</span>
+                <span class="tag">Findings: HB-DET-005</span>
+              </div>
+            </article>
+            
+            <article class="recommendation-card">
+              <div class="insight-head">
+                <span class="priority">Low</span>
+                <span class="status-pill">Next hardening cycle</span>
+              </div>
+              <h3>Turn the current smoke checks into committed tests and a CI gate before adding more integrations.</h3>
+              <p>Hades Blackwatch is becoming reusable security infrastructure. Redaction, schema naming, report rendering, generated-output exclusions, and recursive MCP checks should fail fast when changed.</p>
+              <div class="meta-row">
+                <span class="tag">Owner: Engineering quality owner</span>
+                <span class="tag">Findings: HB-DET-006</span>
+              </div>
+            </article>
+            </div>
+        </section>
+
+        <section id="findings">
+          <h2>Detailed Findings</h2>
+          
+            <article class="finding high" id="hb-det-001">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-001 - manual source review, normalize_findings.py, generate_report.py</p>
+                  <h3>1. Raw scanner evidence can be copied into shareable HTML/PDF reports without secret redaction</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge high">High</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>scanner evidence normalization and report generation</p></section>
+                <section><h4>Affected File</h4><p>scripts/normalize_findings.py:103; scripts/generate_report.py:211; scripts/generate_report.py:406</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>HTML/PDF security reports generated from scanner exports</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;The generic normalizer assigns the entire scanner item to the normalized evidence field. The report generator then renders the evidence field into HTML and PDF. HTML escaping is present, but no recursive redaction or evidence minimization is applied before report generation.&quot;,
+  &quot;observed_code_paths&quot;: [
+    &quot;normalize_generic stores evidence: item&quot;,
+    &quot;render_html renders finding evidence through html_block&quot;,
+    &quot;flatten_for_pdf serializes finding evidence into PDF text&quot;
+  ],
+  &quot;positive_control&quot;: &quot;HTML content is escaped, reducing script injection risk. This does not prevent disclosure of sensitive scanner evidence.&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>A Burp, Qualys, Sonar, or custom scanner export includes request headers, cookies, bearer tokens, API keys, session identifiers, request bodies, or response snippets. normalize_findings.py copies the raw item into the evidence field. generate_report.py embeds that evidence in a polished report. The report is then shared more broadly than the raw scanner export, leaking sensitive operational details.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>The skill explicitly treats scanner output as untrusted input, and the report agent turns that input into downstream deliverables. In an agentic workflow, this expands the blast radius of sensitive scanner evidence unless redaction is deterministic.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>Current AI security guidance treats tool output, scanner output, and report artifacts as sensitive context that can leak credentials or operational details when copied without minimization.</p><ul><li><strong>Evidence exfiltration through polished reports:</strong> Scanner exports commonly contain request headers, tokens, session values, response snippets, and internal hostnames. Action: Add recursive redaction and evidence-minimized report modes before supporting live scanner exports.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Exfiltration and credential access through tool-output handling&quot;,
+  &quot;cwe&quot;: &quot;CWE-200; CWE-532&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Use fixtures with nested secrets and assert normalized JSON, HTML, and PDF bytes do not contain secret values.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM and GenAI Apps 2025</a> - Sensitive information disclosure and improper output handling are directly relevant to report evidence leakage.</li><li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI RMF Generative AI Profile</a> - Supports governance-grade traceability, risk measurement, and risk management for GenAI outputs.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, Raw scanner evidence can be copied into shareable HTML/PDF reports without secret redaction can be understood as a control failure where untrusted influence reaches scanner evidence normalization and report generation and can affect HTML/PDF security reports generated from scanner exports. A Burp, Qualys, Sonar, or custom scanner export includes request headers, cookies, bearer...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into scanner evidence normalization and report generation.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>A Burp, Qualys, Sonar, or custom scanner export includes request headers, cookies, bearer tokens, API keys, session identifiers, request bodies, or response snippets. normalize_findings.py copies the raw item...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Add a recursive redaction layer before storing normalized evidence and before rendering reports. Redact key names and values matching Authorization, Cookie, Set-Cookie, token, secret, passw...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect HTML/PDF security reports generated from scanner exports.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Create a fixture with nested request and response objects containing Authorization, Cookie, Set-Cookie, api_key, password, bearer token, private key markers, and session IDs. Run normalize_findings.py and gene...</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence scanner evidence normalization and report generation so the workflow reaches HTML/PDF security reports generated from scanner exports in an unintended way.</p></section><section><h4>Preconditions</h4><p>The skill explicitly treats scanner output as untrusted input, and the report agent turns that input into downstream deliverables. In an agentic workflow, this expands the blast radius of sensitive scanner evidence unless redaction is deterministic.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>HTML/PDF security reports generated from scanner exports</p></section><section><h4>Detection Points</h4><p>Create a fixture with nested request and response objects containing Authorization, Cookie, Set-Cookie, api_key, password, bearer token, private key markers, and session IDs. Run normalize_findings.py and generate_report.py, then assert none of the secret val...</p></section><section><h4>Defensive Breakpoints</h4><p>Add a recursive redaction layer before storing normalized evidence and before rendering reports. Redact key names and values matching Authorization, Cookie, Set-Cookie, token, secret, password, api_key, bearer, private_key, session, credential, client_secret, and configurable organization patterns. Prefer a safe evide...</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Sensitive Information Disclosure&quot;,
+  &quot;owasp_agentic&quot;: &quot;Information Disclosure through Tool and Context Handling&quot;,
+  &quot;mitre_atlas&quot;: &quot;Credential Access / Exfiltration through tool-output handling&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Map, Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-200; CWE-532&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;High&quot;,
+  &quot;rationale&quot;: &quot;The issue can expose high-value security evidence and credentials, is easy to reproduce with realistic scanner exports, and is amplified by automated report sharing.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Add a recursive redaction layer before storing normalized evidence and before rendering reports. Redact key names and values matching Authorization, Cookie, Set-Cookie, token, secret, password, api_key, bearer, private_key, session, credential, client_secret, and configurable organization patterns. Prefer a safe evidence summary allowlist over storing full raw scanner items by default.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Create a fixture with nested request and response objects containing Authorization, Cookie, Set-Cookie, api_key, password, bearer token, private key markers, and session IDs. Run normalize_findings.py and generate_report.py, then assert none of the secret values appear in normalized JSON, HTML, or PDF bytes.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Some scanner proof data can remain sensitive even after key-based redaction. High-risk reports should carry a classification label and support an evidence-minimized mode.</p></section>
+              </div>
+            </article>
+            
+            <article class="finding medium" id="hb-det-003">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-003 - mcp_manifest_audit.py, manual source review</p>
+                  <h3>2. MCP manifest auditor can under-classify nested permissive tool schemas</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge medium">Medium</span>
+                  <span class="badge confidence">Confidence: medium</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>MCP tool contract audit</p></section>
+                <section><h4>Affected File</h4><p>scripts/mcp_manifest_audit.py:68-98</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>MCP risk tier assignment and tool safety classification</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;The auditor reads only top-level schema properties for explicit issue generation. It may see nested words through JSON stringification, but it does not recursively report nested free-form parameters, unconstrained object schemas, additionalProperties, arrays of action objects, or weakly constrained nested URL/path/command/body fields.&quot;,
+  &quot;positive_control&quot;: &quot;The example manifest correctly flags a top-level command parameter as T4.&quot;,
+  &quot;gap&quot;: &quot;A tool can hide broad authority under a neutral top-level object such as config, request, options, action, or payload.&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>An MCP server exposes a tool with a benign top-level schema but nested command, URL, path, headers, body, credential, or action fields. The current auditor may not clearly emit high-risk nested JSON-path issues, causing the orchestrator to underestimate the server&#x27;s risk tier.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>MCP tools are privileged agent boundaries. Under-classifying nested tool authority can make prompt injection or malicious tool metadata more dangerous in a connected agent environment.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>MCP security guidance emphasizes authorization boundaries, SSRF, token handling, local server risk, and scope minimization. Nested schemas can hide exactly the kind of authority that needs strict review.</p><ul><li><strong>Nested dangerous capability hiding:</strong> A neutral top-level object can contain nested command, URL, credential, body, or action fields that change the true risk tier. Action: Walk schemas recursively and report exact JSON paths for risky nested fields and permissive object shapes.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Tool abuse via agent capability&quot;,
+  &quot;cwe&quot;: &quot;CWE-20; CWE-749&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Add nested MCP manifest fixtures with command, URL, headers, body, credential, and additionalProperties paths; assert T4 classification.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices">Model Context Protocol Security Best Practices</a> - Covers MCP-specific implementation risks including SSRF, token passthrough, authorization, and local server compromise.</li><li><a href="https://owasp.org/www-project-agentic-skills-top-10/">OWASP Agentic Skills Top 10</a> - Skill and tool execution-layer risks map to dangerous hidden capabilities and weak validation.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, MCP manifest auditor can under-classify nested permissive tool schemas can be understood as a control failure where untrusted influence reaches MCP tool contract audit and can affect MCP risk tier assignment and tool safety classification. An MCP server exposes a tool with a benign top-level schema but nested command, URL, path, headers, body, credential, or action fields. The...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into MCP tool contract audit.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>An MCP server exposes a tool with a benign top-level schema but nested command, URL, path, headers, body, credential, or action fields. The current auditor may not clearly emit high-risk nested JSON-path issue...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Walk input schemas recursively and report exact JSON paths. Flag additionalProperties true or absent on object-like inputs, nested sensitive parameter names, arrays of action objects, missi...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect MCP risk tier assignment and tool safety classification.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Add a manifest fixture with inputSchema.properties.config.properties.command, inputSchema.properties.request.properties.url, nested headers/body fields, and additionalProperties true. Assert the auditor return...</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence MCP tool contract audit so the workflow reaches MCP risk tier assignment and tool safety classification in an unintended way.</p></section><section><h4>Preconditions</h4><p>MCP tools are privileged agent boundaries. Under-classifying nested tool authority can make prompt injection or malicious tool metadata more dangerous in a connected agent environment.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>MCP risk tier assignment and tool safety classification</p></section><section><h4>Detection Points</h4><p>Add a manifest fixture with inputSchema.properties.config.properties.command, inputSchema.properties.request.properties.url, nested headers/body fields, and additionalProperties true. Assert the auditor returns T4 and reports each nested JSON path.</p></section><section><h4>Defensive Breakpoints</h4><p>Walk input schemas recursively and report exact JSON paths. Flag additionalProperties true or absent on object-like inputs, nested sensitive parameter names, arrays of action objects, missing required fields, broad string parameters, and URL/path/command-like fields without enums, allowlists, regex constraints, or app...</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Excessive Agency; Insecure Plugin Design&quot;,
+  &quot;owasp_agentic&quot;: &quot;Tool Misuse; Agentic Supply Chain&quot;,
+  &quot;mitre_atlas&quot;: &quot;Tool abuse and execution via agent capability&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Map, Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-20; CWE-749&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;Medium&quot;,
+  &quot;rationale&quot;: &quot;The weakness affects detection quality for potentially high-risk tools. Impact depends on the reviewed MCP manifests and whether live high-privilege MCP tools are connected.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Walk input schemas recursively and report exact JSON paths. Flag additionalProperties true or absent on object-like inputs, nested sensitive parameter names, arrays of action objects, missing required fields, broad string parameters, and URL/path/command-like fields without enums, allowlists, regex constraints, or approval language.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Add a manifest fixture with inputSchema.properties.config.properties.command, inputSchema.properties.request.properties.url, nested headers/body fields, and additionalProperties true. Assert the auditor returns T4 and reports each nested JSON path.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Static manifest checks cannot prove runtime authorization. High-risk MCP tools still need runtime review, allowlists, approval gates, and audit logs.</p></section>
+              </div>
+            </article>
+            
+            <article class="finding medium" id="hb-det-002">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-002 - surface_mapper.py, manual source review</p>
+                  <h3>3. Surface mapper scans generated reports and previous report inputs, polluting later analysis</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge medium">Medium</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>local attack surface discovery</p></section>
+                <section><h4>Affected File</h4><p>scripts/surface_mapper.py:76-92; .gitignore:9</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>review evidence quality and finding accuracy</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;DEFAULT_SKIP_DIRS excludes common build and dependency folders but not reports/ or out/. The rerun included generated report HTML, PDF, and report input JSON as if they were source surfaces. The surface counts increased after report generation: mcp rose to 32, authz to 57, and secrets to 55 because prior reports contained those words.&quot;,
+  &quot;observed_noise&quot;: [
+    &quot;reports/hades-blackwatch-fullstack-review-input.json&quot;,
+    &quot;reports/hades-blackwatch-skill-repository-hades-blackwatch-full-stack-security-review.html&quot;,
+    &quot;reports/hades-blackwatch-skill-repository-hades-blackwatch-full-stack-security-review.pdf&quot;
+  ],
+  &quot;control_gap&quot;: &quot;reports/ is ignored in .gitignore but not skipped by surface_mapper.py.&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>Generated reports contain security terminology and possibly sensitive evidence. A later full-stack analysis scans those reports and treats them as current code/docs evidence, producing duplicated findings, stale evidence, or false positives.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>Generated reports can become context for subsequent agent runs. If the tool cannot separate primary source from generated evidence, specialist agents may anchor on stale report content rather than current system behavior.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>Agentic review workflows are vulnerable to stale or attacker-shaped context when generated artifacts are re-ingested as if they were primary source evidence.</p><ul><li><strong>Generated artifact context poisoning:</strong> Reports can contain old findings, keywords, and sensitive context that distort later local scans. Action: Exclude reports and other generated outputs by default; require explicit opt-in when auditing report artifacts.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Data poisoning / evidence manipulation analogue&quot;,
+  &quot;cwe&quot;: &quot;CWE-703&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Add generated report fixtures and assert surface_mapper.py excludes them unless an explicit include-generated option is used.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/">OWASP Top 10 for Agentic Applications</a> - Agent memory, context poisoning, and tool reliability risks map to stale generated evidence being reused by agents.</li><li><a href="https://atlas.mitre.org/">MITRE ATLAS</a> - Provides AI-system threat mapping for poisoning and evasion-adjacent behaviors.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, Surface mapper scans generated reports and previous report inputs, polluting later analysis can be understood as a control failure where untrusted influence reaches local attack surface discovery and can affect review evidence quality and finding accuracy. Generated reports contain security terminology and possibly sensitive evidence. A later full-stack analysis scans those rep...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into local attack surface discovery.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>Generated reports contain security terminology and possibly sensitive evidence. A later full-stack analysis scans those reports and treats them as current code/docs evidence, producing duplicated findings, sta...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Add reports/, out/, coverage/, .pytest_cache/, .mypy_cache/, and other generated-output paths to DEFAULT_SKIP_DIRS. Add --include-generated and --exclude options for controlled overrides. C...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect review evidence quality and finding accuracy.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Create reports/generated.html containing token, MCP, credential, and authorization terms. Run surface_mapper.py and assert reports/generated.html is excluded by default. Then run with an explicit include-gener...</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence local attack surface discovery so the workflow reaches review evidence quality and finding accuracy in an unintended way.</p></section><section><h4>Preconditions</h4><p>Generated reports can become context for subsequent agent runs. If the tool cannot separate primary source from generated evidence, specialist agents may anchor on stale report content rather than current system behavior.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>review evidence quality and finding accuracy</p></section><section><h4>Detection Points</h4><p>Create reports/generated.html containing token, MCP, credential, and authorization terms. Run surface_mapper.py and assert reports/generated.html is excluded by default. Then run with an explicit include-generated option and assert it appears.</p></section><section><h4>Defensive Breakpoints</h4><p>Add reports/, out/, coverage/, .pytest_cache/, .mypy_cache/, and other generated-output paths to DEFAULT_SKIP_DIRS. Add --include-generated and --exclude options for controlled overrides. Consider reading .gitignore patterns for default exclusions.</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Context/Data Poisoning analogue for review evidence&quot;,
+  &quot;owasp_agentic&quot;: &quot;Evidence Integrity / Context Poisoning&quot;,
+  &quot;mitre_atlas&quot;: &quot;Data poisoning and evasion-adjacent evidence manipulation&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-703&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;Medium&quot;,
+  &quot;rationale&quot;: &quot;The issue does not directly execute code or expose new data, but it materially degrades the accuracy and repeatability of agentic security reviews.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Add reports/, out/, coverage/, .pytest_cache/, .mypy_cache/, and other generated-output paths to DEFAULT_SKIP_DIRS. Add --include-generated and --exclude options for controlled overrides. Consider reading .gitignore patterns for default exclusions.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Create reports/generated.html containing token, MCP, credential, and authorization terms. Run surface_mapper.py and assert reports/generated.html is excluded by default. Then run with an explicit include-generated option and assert it appears.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Some users may intentionally want to audit report artifacts. That should be explicit and separate from source surface mapping.</p></section>
+              </div>
+            </article>
+            
+            <article class="finding low" id="hb-det-005">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-005 - manual docs review</p>
+                  <h3>4. Documentation describes scanner auto-detection before the registry implementation exists</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge low">Low</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>README and documentation accuracy</p></section>
+                <section><h4>Affected File</h4><p>README.md:159; README.md:228; README.md:440; docs/index.html:753; docs/index.html:895</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>user expectations for scanner integrations</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;README and docs state that scanner backends are detected and that the skill chooses the safest integration path. The roadmap also says scanner_registry.py still needs to be added. The current implementation has a scanner-registry agent role but no executable scanner registry script.&quot;,
+  &quot;current_implementation&quot;: &quot;Role guidance exists in agents/roles/scanner-registry.md, but scanner_registry.py is roadmap-only.&quot;,
+  &quot;impact&quot;: &quot;Users may expect automatic detection of Sonar, Burp, Qualys, Semgrep, CodeQL, or Trivy when the current repo mainly supports manual/report-driven workflows.&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>A user relies on documentation that implies automated scanner detection, then assumes coverage exists when no scanner backend was actually queried or imported. This can create false assurance in a security review.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>Agentic tools should be explicit about what evidence was actually collected. Overstated capability descriptions can cause both humans and agents to over-trust missing scanner coverage.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>Threat-informed security reporting depends on evidence provenance. Overstating scanner or MCP coverage can create false assurance and hide missing controls.</p><ul><li><strong>False assurance through capability claims:</strong> Users may assume Burp, Qualys, Sonar, Semgrep, CodeQL, or Trivy evidence was collected when only local scripts or examples ran. Action: Separate implemented, designed, and roadmap capabilities in documentation and final reports.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Defense evasion via false assurance&quot;,
+  &quot;cwe&quot;: &quot;CWE-1059&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Add a docs consistency check that compares capability claims to implemented scripts and report evidence.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI RMF Generative AI Profile</a> - Supports transparent risk measurement, governance, and lifecycle accountability.</li><li><a href="https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/">OWASP Top 10 for Agentic Applications</a> - Agentic tool reliability and overreliance risks are relevant when documentation implies missing scanner coverage.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: Medium</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, Documentation describes scanner auto-detection before the registry implementation exists can be understood as a control failure where untrusted influence reaches README and documentation accuracy and can affect user expectations for scanner integrations. A user relies on documentation that implies automated scanner detection, then assumes coverage exists when no scanner backend...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into README and documentation accuracy.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>A user relies on documentation that implies automated scanner detection, then assumes coverage exists when no scanner backend was actually queried or imported. This can create false assurance in a security rev...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Adjust wording to say Hades Blackwatch is designed to support scanner detection and currently supports local scripts, report ingestion, examples, and role guidance. Keep auto-detection lang...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect user expectations for scanner integrations.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Add a docs consistency checklist or test that verifies README capability claims match implemented scripts and roadmap status.</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence README and documentation accuracy so the workflow reaches user expectations for scanner integrations in an unintended way.</p></section><section><h4>Preconditions</h4><p>Agentic tools should be explicit about what evidence was actually collected. Overstated capability descriptions can cause both humans and agents to over-trust missing scanner coverage.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>user expectations for scanner integrations</p></section><section><h4>Detection Points</h4><p>Add a docs consistency checklist or test that verifies README capability claims match implemented scripts and roadmap status.</p></section><section><h4>Defensive Breakpoints</h4><p>Adjust wording to say Hades Blackwatch is designed to support scanner detection and currently supports local scripts, report ingestion, examples, and role guidance. Keep auto-detection language only after scanner_registry.py exists and is tested.</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Overreliance / Supply Chain Tooling Gap&quot;,
+  &quot;owasp_agentic&quot;: &quot;Tool Reliability / Coverage Gap&quot;,
+  &quot;mitre_atlas&quot;: &quot;Defense evasion via false assurance&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Govern, Map, Measure&quot;,
+  &quot;cwe&quot;: &quot;CWE-1059&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;Low&quot;,
+  &quot;rationale&quot;: &quot;This is a documentation and expectation risk, not a direct vulnerability. It matters because the skill is intended to drive security decisions.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Adjust wording to say Hades Blackwatch is designed to support scanner detection and currently supports local scripts, report ingestion, examples, and role guidance. Keep auto-detection language only after scanner_registry.py exists and is tested.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Add a docs consistency checklist or test that verifies README capability claims match implemented scripts and roadmap status.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Even after scanner registry implementation, reports should always list which backends actually ran, which were skipped, and why.</p></section>
+              </div>
+            </article>
+            
+            <article class="finding low" id="hb-det-004">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-004 - normalize_findings.py, manual source review</p>
+                  <h3>5. Hades rename changed the normalized finding schema without compatibility notes</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge low">Low</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>finding normalization and downstream interoperability</p></section>
+                <section><h4>Affected File</h4><p>scripts/normalize_findings.py:127</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>normalized findings consumed by reports, CI, or downstream tooling</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;normalize_findings.py now emits schema: hades-blackwatch.findings.v1 after the rename. Existing historical reports, dashboards, or downstream consumers may still expect a previous skill schema, but no compatibility note or alias is documented.&quot;,
+  &quot;observed_output&quot;: &quot;schema: hades-blackwatch.findings.v1&quot;,
+  &quot;legacy_output&quot;: &quot;previous skill schema&quot;,
+  &quot;expected_output&quot;: &quot;schema: hades-blackwatch.findings.v1 with documented migration behavior for older consumers&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>Downstream systems or report consumers route, validate, or store findings based on the schema value. An undocumented schema migration can cause failed validation, incorrect ownership, broken dashboards, or mixed historical data after the skill rename.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>Agentic review workflows depend on machine-readable handoffs. Undocumented schema changes weaken provenance and can cause downstream agents or integrations to misinterpret the evidence source.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>Agentic security workflows rely on provenance, source identity, and repeatable machine-readable handoffs. Undocumented schema migrations reduce trust in downstream automation and audit evidence.</p><ul><li><strong>Schema compatibility gap:</strong> A renamed skill with a new schema can break routing, validation, dashboards, and later agent interpretation if migration behavior is not documented. Action: Document aliases or migration behavior and add a schema regression test.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Defense evasion through tooling inconsistency&quot;,
+  &quot;cwe&quot;: &quot;CWE-1104&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Assert normalize_findings.py emits hades-blackwatch.findings.v1 or a documented compatibility alias.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI RMF Generative AI Profile</a> - Governance and risk management practices emphasize traceability and lifecycle controls.</li><li><a href="https://owasp.org/www-project-agentic-skills-top-10/">OWASP Agentic Skills Top 10</a> - Skill provenance and governance risks apply to reusable agent skill packages.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, Hades rename changed the normalized finding schema without compatibility notes can be understood as a control failure where untrusted influence reaches finding normalization and downstream interoperability and can affect normalized findings consumed by reports, CI, or downstream tooling. Downstream systems or report consumers route, validate, or store findings based on the sche...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into finding normalization and downstream interoperability.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>Downstream systems or report consumers route, validate, or store findings based on the schema value. An undocumented schema migration can cause failed validation, incorrect ownership, broken dashboards, or mix...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Document the Hades Blackwatch schema in references/report-format.md. If backward compatibility is needed, add schema_aliases or schema_version fields for previous skill schemas and explain...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect normalized findings consumed by reports, CI, or downstream tooling.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Run normalize_findings.py against examples/scanner-findings.example.json and assert the schema field equals hades-blackwatch.findings.v1.</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence finding normalization and downstream interoperability so the workflow reaches normalized findings consumed by reports, CI, or downstream tooling in an unintended way.</p></section><section><h4>Preconditions</h4><p>Agentic review workflows depend on machine-readable handoffs. Undocumented schema changes weaken provenance and can cause downstream agents or integrations to misinterpret the evidence source.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>normalized findings consumed by reports, CI, or downstream tooling</p></section><section><h4>Detection Points</h4><p>Run normalize_findings.py against examples/scanner-findings.example.json and assert the schema field equals hades-blackwatch.findings.v1.</p></section><section><h4>Defensive Breakpoints</h4><p>Document the Hades Blackwatch schema in references/report-format.md. If backward compatibility is needed, add schema_aliases or schema_version fields for previous skill schemas and explain how old reports should be handled.</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Supply Chain / Model and Tooling Integrity&quot;,
+  &quot;owasp_agentic&quot;: &quot;Agentic Supply Chain / Tool Contract Drift&quot;,
+  &quot;mitre_atlas&quot;: &quot;Defense evasion through tooling inconsistency&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Map, Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-1104&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;Medium&quot;,
+  &quot;rationale&quot;: &quot;The issue affects integration integrity rather than direct exploitability. It can still break automated review pipelines and evidence provenance during migration.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Document the Hades Blackwatch schema in references/report-format.md. If backward compatibility is needed, add schema_aliases or schema_version fields for previous skill schemas and explain how old reports should be handled.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Run normalize_findings.py against examples/scanner-findings.example.json and assert the schema field equals hades-blackwatch.findings.v1.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Previously generated reports may still contain old schema identifiers. Migration notes should clarify that old reports are historical artifacts.</p></section>
+              </div>
+            </article>
+            
+            <article class="finding low" id="hb-det-006">
+              <div class="finding-head">
+                <div>
+                  <p class="kicker">HB-DET-006 - manual source review, local script smoke tests</p>
+                  <h3>6. Smoke checks are manual and not enforced as automated regression tests</h3>
+                </div>
+                <div class="finding-badges">
+                  <span class="badge low">Low</span>
+                  <span class="badge confidence">Confidence: high</span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <section><h4>Affected Component</h4><p>test and release assurance</p></section>
+                <section><h4>Affected File</h4><p>scripts/generate_report.py; scripts/normalize_findings.py; scripts/mcp_manifest_audit.py; scripts/surface_mapper.py</p></section>
+                <section><h4>Affected Endpoint</h4><p class="empty">Not provided.</p></section>
+                <section><h4>Affected Asset</h4><p>future reliability of security review outputs</p></section>
+              </div>
+              <div class="finding-body">
+                <section class="wide"><h4>Evidence</h4><pre>{
+  &quot;summary&quot;: &quot;Local smoke checks passed for skill validation, surface mapping, MCP manifest audit, prompt pack generation, normalization, and report generation. However, these checks are not codified as a test suite or CI gate.&quot;,
+  &quot;successful_checks&quot;: [
+    &quot;quick_validate.py returned Skill is valid&quot;,
+    &quot;mcp_manifest_audit.py classified run_shell_command as T4&quot;,
+    &quot;normalize_findings.py produced one normalized finding&quot;,
+    &quot;generate_report.py produced HTML and PDF outputs&quot;
+  ],
+  &quot;gap&quot;: &quot;No committed tests assert redaction, report generation, schema name, surface exclusion, nested MCP schemas, or PDF/HTML output integrity.&quot;
+}</pre></section>
+                <section><h4>Attack Path</h4><p>A future change regresses redaction, report escaping, schema names, surface exclusions, or MCP risk classification. Without automated tests, the regression may be discovered only after a report is shared or a review misses a risky tool.</p></section>
+                <section><h4>AI / Agent Relevance</h4><p>Security skills become reusable agent infrastructure. Regression in the skill can mislead future security reviews and downstream agent decisions.</p></section>
+                <section class="wide threat-note"><h4>Threat Intelligence</h4><p class="kicker">As of 2026-05-28</p><p>Reusable AI security skills become supply-chain components. Automated regression gates are needed so redaction, MCP risk classification, schema identity, and report rendering do not silently weaken over time.</p><ul><li><strong>Agentic skill supply-chain regression:</strong> Security review tooling can become a weak link if its own controls are not tested before integrations expand. Action: Create tests for redaction, report output, schema name, surface exclusions, and recursive MCP schema classification; run them in CI.</li></ul><h4>Mapped Techniques</h4><pre>{
+  &quot;mitre_atlas&quot;: &quot;Defense evasion through tooling weakness&quot;,
+  &quot;cwe&quot;: &quot;CWE-1059&quot;
+}</pre><h4>Detection / Test Impact</h4><p>Add unittest or pytest coverage plus a CI workflow for the security-critical script paths.</p><h4>Sources</h4><ul class="source-list"><li><a href="https://owasp.org/www-project-agentic-skills-top-10/">OWASP Agentic Skills Top 10</a> - Reusable skills, plugins, and agent execution layers require governance, validation, and supply-chain controls.</li><li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI RMF Generative AI Profile</a> - Supports lifecycle risk management and repeatable controls for GenAI systems.</li></ul><div class="meta-row"><span class="tag">Freshness: Checked against official sources on 2026-05-28</span><span class="tag">Confidence: High</span></div></section>
+                
+    <section class="wide attack-visual">
+      <h4>Attack Path Visualization</h4>
+      <h3>How This Vulnerability Works</h3>
+      <p>For Hades Blackwatch Skill Repository, Smoke checks are manual and not enforced as automated regression tests can be understood as a control failure where untrusted influence reaches test and release assurance and can affect future reliability of security review outputs. A future change regresses redaction, report escaping, schema names, surface exclusions, or MCP risk classification. Without automated tests, the re...</p>
+      <div class="flow-diagram">
+            <div class="flow-step">
+              <span class="step-number">1</span>
+              <strong>Influence</strong>
+              <p>Untrusted input or context reaches the reviewed workflow.</p>
+              <div class="meta-row"><span class="tag">Actor: Attacker-controlled input</span><span class="tag danger">Gap: Input is treated as more trusted than it should be.</span><span class="tag">Break: Classify the source as untrusted and constrain it early.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">2</span>
+              <strong>Trust Boundary</strong>
+              <p>The workflow passes data into test and release assurance.</p>
+              <div class="meta-row"><span class="tag">Actor: Application or agent runtime</span><span class="tag danger">Gap: A deterministic policy check is missing or incomplete.</span><span class="tag">Break: Validate before the data crosses the boundary.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">3</span>
+              <strong>Control Failure</strong>
+              <p>A future change regresses redaction, report escaping, schema names, surface exclusions, or MCP risk classification. Without automated tests, the regression may be discovered only after a report is shared or a...</p>
+              <div class="meta-row"><span class="tag">Actor: Vulnerable component</span><span class="tag danger">Gap: Authorization, validation, isolation, or evidence minimization does not fully hold.</span><span class="tag">Break: Add a standard-library unittest or pytest suite for redaction, normalization schema, HTML escaping, PDF generation, surface exclusions, and recursive MCP schema risk classification. Add a C...</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">4</span>
+              <strong>Impact</strong>
+              <p>The unsafe path can affect future reliability of security review outputs.</p>
+              <div class="meta-row"><span class="tag">Actor: Impacted asset</span><span class="tag danger">Gap: Blast radius is not contained.</span><span class="tag">Break: Limit privileges, scope, data exposure, and egress.</span></div>
+            </div>
+            
+            <div class="flow-step">
+              <span class="step-number">5</span>
+              <strong>Detect / Break</strong>
+              <p>Create tests/test_normalize_findings.py, tests/test_generate_report.py, tests/test_mcp_manifest_audit.py, and tests/test_surface_mapper.py with the current examples plus security fixtures.</p>
+              <div class="meta-row"><span class="tag">Actor: Security control</span><span class="tag danger">Gap: Regression coverage or monitoring may be missing.</span><span class="tag">Break: Turn the regression test and detection point into a release gate.</span></div>
+            </div>
+            </div>
+      <div class="mini-grid"><section><h4>Attacker Goal</h4><p>Influence test and release assurance so the workflow reaches future reliability of security review outputs in an unintended way.</p></section><section><h4>Preconditions</h4><p>Security skills become reusable agent infrastructure. Regression in the skill can mislead future security reviews and downstream agent decisions.</p></section><section><h4>Control Breaks</h4><p>Missing or incomplete deterministic enforcement at the trust boundary.</p></section><section><h4>Impact</h4><p>future reliability of security review outputs</p></section><section><h4>Detection Points</h4><p>Create tests/test_normalize_findings.py, tests/test_generate_report.py, tests/test_mcp_manifest_audit.py, and tests/test_surface_mapper.py with the current examples plus security fixtures.</p></section><section><h4>Defensive Breakpoints</h4><p>Add a standard-library unittest or pytest suite for redaction, normalization schema, HTML escaping, PDF generation, surface exclusions, and recursive MCP schema risk classification. Add a CI workflow to run skill validation and tests on every change.</p></section></div>
+      <p>Generated from the finding evidence, attack path, affected component, affected asset, fix, and regression test.</p>
+      <p class="safe-note">Conceptual defensive flow only. No exploit payloads or unauthorized testing steps are provided.</p>
+    </section>
+    
+                <section><h4>Framework Mappings</h4><pre>{
+  &quot;owasp_llm&quot;: &quot;Supply Chain Vulnerabilities&quot;,
+  &quot;owasp_agentic&quot;: &quot;Agentic Supply Chain / Tool Reliability&quot;,
+  &quot;mitre_atlas&quot;: &quot;Defense evasion through tooling weakness&quot;,
+  &quot;nist_ai_rmf&quot;: &quot;Measure, Manage&quot;,
+  &quot;cwe&quot;: &quot;CWE-1059&quot;,
+  &quot;cve&quot;: null
+}</pre></section>
+                <section><h4>Score</h4><pre>{
+  &quot;system&quot;: &quot;AIVSS&quot;,
+  &quot;value&quot;: &quot;Low&quot;,
+  &quot;rationale&quot;: &quot;This is an assurance gap, but it affects security-critical review tooling.&quot;
+}</pre></section>
+                <section class="wide fix"><h4>Recommended Fix</h4><p>Add a standard-library unittest or pytest suite for redaction, normalization schema, HTML escaping, PDF generation, surface exclusions, and recursive MCP schema risk classification. Add a CI workflow to run skill validation and tests on every change.</p></section>
+                <section class="wide"><h4>Regression Test</h4><p>Create tests/test_normalize_findings.py, tests/test_generate_report.py, tests/test_mcp_manifest_audit.py, and tests/test_surface_mapper.py with the current examples plus security fixtures.</p></section>
+                <section class="wide"><h4>Residual Risk</h4><p>Automated tests should be supplemented by manual review for new scanner adapters, new MCP integrations, and report template changes.</p></section>
+              </div>
+            </article>
+            
+        </section>
+
+        <section id="roadmap">
+          <h2>Personalized Remediation Roadmap</h2>
+          <table><thead><tr><th>ID</th><th>Severity</th><th>Finding</th><th>Recommended Fix</th></tr></thead><tbody><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td><span class="badge high">High</span></td><td>Raw scanner evidence can be copied into shareable HTML/PDF reports without secret redaction</td><td>Add a recursive redaction layer before storing normalized evidence and before rendering reports. Redact key names and values matching Authorization, Cookie, Set-Cookie, token, secret, password, api_key, bearer, private_key, session, credential, client_secret, and configurable organization patterns. Prefer a safe evidence summary allowlist over storing full raw scanner items by default.</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td><span class="badge medium">Medium</span></td><td>MCP manifest auditor can under-classify nested permissive tool schemas</td><td>Walk input schemas recursively and report exact JSON paths. Flag additionalProperties true or absent on object-like inputs, nested sensitive parameter names, arrays of action objects, missing required fields, broad string parameters, and URL/path/command-like fields without enums, allowlists, regex constraints, or approval language.</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td><span class="badge medium">Medium</span></td><td>Surface mapper scans generated reports and previous report inputs, polluting later analysis</td><td>Add reports/, out/, coverage/, .pytest_cache/, .mypy_cache/, and other generated-output paths to DEFAULT_SKIP_DIRS. Add --include-generated and --exclude options for controlled overrides. Consider reading .gitignore patterns for default exclusions.</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td><span class="badge low">Low</span></td><td>Documentation describes scanner auto-detection before the registry implementation exists</td><td>Adjust wording to say Hades Blackwatch is designed to support scanner detection and currently supports local scripts, report ingestion, examples, and role guidance. Keep auto-detection language only after scanner_registry.py exists and is tested.</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td><span class="badge low">Low</span></td><td>Hades rename changed the normalized finding schema without compatibility notes</td><td>Document the Hades Blackwatch schema in references/report-format.md. If backward compatibility is needed, add schema_aliases or schema_version fields for previous skill schemas and explain how old reports should be handled.</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td><span class="badge low">Low</span></td><td>Smoke checks are manual and not enforced as automated regression tests</td><td>Add a standard-library unittest or pytest suite for redaction, normalization schema, HTML escaping, PDF generation, surface exclusions, and recursive MCP schema risk classification. Add a CI workflow to run skill validation and tests on every change.</td></tr></tbody></table>
+        </section>
+
+        <section id="tests">
+          <h2>Regression Test Plan</h2>
+          <table><thead><tr><th>ID</th><th>Test / Control</th></tr></thead><tbody><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>Create a fixture with nested request and response objects containing Authorization, Cookie, Set-Cookie, api_key, password, bearer token, private key markers, and session IDs. Run normalize_findings.py and generate_report.py, then assert none of the secret values appear in normalized JSON, HTML, or PDF bytes.</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>Add a manifest fixture with inputSchema.properties.config.properties.command, inputSchema.properties.request.properties.url, nested headers/body fields, and additionalProperties true. Assert the auditor returns T4 and reports each nested JSON path.</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>Create reports/generated.html containing token, MCP, credential, and authorization terms. Run surface_mapper.py and assert reports/generated.html is excluded by default. Then run with an explicit include-generated option and assert it appears.</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>Add a docs consistency checklist or test that verifies README capability claims match implemented scripts and roadmap status.</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>Run normalize_findings.py against examples/scanner-findings.example.json and assert the schema field equals hades-blackwatch.findings.v1.</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>Create tests/test_normalize_findings.py, tests/test_generate_report.py, tests/test_mcp_manifest_audit.py, and tests/test_surface_mapper.py with the current examples plus security fixtures.</td></tr></tbody></table>
+        </section>
+
+        <section id="framework">
+          <h2>Framework Coverage</h2>
+          <table><thead><tr><th>ID</th><th>Framework</th><th>Mapping</th></tr></thead><tbody><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>owasp_llm</td><td>Sensitive Information Disclosure</td></tr><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>owasp_agentic</td><td>Information Disclosure through Tool and Context Handling</td></tr><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>mitre_atlas</td><td>Credential Access / Exfiltration through tool-output handling</td></tr><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>nist_ai_rmf</td><td>Map, Measure, Manage</td></tr><tr><td><a href="#hb-det-001">HB-DET-001</a></td><td>cwe</td><td>CWE-200; CWE-532</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>owasp_llm</td><td>Excessive Agency; Insecure Plugin Design</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>owasp_agentic</td><td>Tool Misuse; Agentic Supply Chain</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>mitre_atlas</td><td>Tool abuse and execution via agent capability</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>nist_ai_rmf</td><td>Map, Measure, Manage</td></tr><tr><td><a href="#hb-det-003">HB-DET-003</a></td><td>cwe</td><td>CWE-20; CWE-749</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>owasp_llm</td><td>Context/Data Poisoning analogue for review evidence</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>owasp_agentic</td><td>Evidence Integrity / Context Poisoning</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>mitre_atlas</td><td>Data poisoning and evasion-adjacent evidence manipulation</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>nist_ai_rmf</td><td>Measure, Manage</td></tr><tr><td><a href="#hb-det-002">HB-DET-002</a></td><td>cwe</td><td>CWE-703</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>owasp_llm</td><td>Overreliance / Supply Chain Tooling Gap</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>owasp_agentic</td><td>Tool Reliability / Coverage Gap</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>mitre_atlas</td><td>Defense evasion via false assurance</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>nist_ai_rmf</td><td>Govern, Map, Measure</td></tr><tr><td><a href="#hb-det-005">HB-DET-005</a></td><td>cwe</td><td>CWE-1059</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>owasp_llm</td><td>Supply Chain / Model and Tooling Integrity</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>owasp_agentic</td><td>Agentic Supply Chain / Tool Contract Drift</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>mitre_atlas</td><td>Defense evasion through tooling inconsistency</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>nist_ai_rmf</td><td>Map, Measure, Manage</td></tr><tr><td><a href="#hb-det-004">HB-DET-004</a></td><td>cwe</td><td>CWE-1104</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>owasp_llm</td><td>Supply Chain Vulnerabilities</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>owasp_agentic</td><td>Agentic Supply Chain / Tool Reliability</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>mitre_atlas</td><td>Defense evasion through tooling weakness</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>nist_ai_rmf</td><td>Measure, Manage</td></tr><tr><td><a href="#hb-det-006">HB-DET-006</a></td><td>cwe</td><td>CWE-1059</td></tr></tbody></table>
+        </section>
+
+        <section class="panel" id="residual">
+          <h2>Residual Risk and Assumptions</h2>
+          <p>Residual risk depends on complete remediation, regression test adoption, scanner coverage, evidence redaction, and continued enforcement of deterministic authorization around model-driven actions.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
