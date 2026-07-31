@@ -1,4 +1,15 @@
+<p align="center">
+  <img src="assets/banner-hades-blackwatch.png" alt="Hades Blackwatch" width="100%">
+</p>
+
 # Hades Blackwatch
+
+<p align="center">
+  <img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square">
+  <img alt="Language" src="https://img.shields.io/badge/python-3.x-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img alt="Framework coverage" src="https://img.shields.io/badge/OWASP-LLM%20%7C%20Agentic%20%7C%20AIVSS-critical?style=flat-square">
+  <img alt="Status" src="https://img.shields.io/badge/status-active-success?style=flat-square">
+</p>
 
 Hades Blackwatch is an integrated Codex skill for AI application security review, agentic security testing, MCP risk review, secure code review, scanner evidence correlation, and detailed report generation.
 
@@ -166,6 +177,24 @@ The skill uses a supervisor-plus-specialists architecture. Role definitions live
 | Attack Path Visualization Agent | Turns each material vulnerability into a defender-safe exploit-flow diagram with control breaks, detection points, and defensive breakpoints. |
 | Test Builder Agent | Converts findings into unit tests, integration tests, prompt evals, scanner rules, CI gates, and runtime detections. |
 | Report Agent | Produces findings-first reports with severity, evidence, impact, mappings, fix, and regression tests. |
+
+```mermaid
+flowchart LR
+    U[User request] --> ORC[Security Orchestrator]
+    ORC --> TI[Latest Threat Intel]
+    ORC --> TM[AI Threat Model]
+    ORC --> PI[Prompt Injection]
+    ORC --> ATS[Agent Tool Security]
+    ORC --> RAG[RAG & Data Security]
+    ORC --> SCR[Secure Code Review]
+    ORC --> MCP[MCP Server Auditor]
+    ORC --> SUP[Supply Chain]
+    TI & TM & PI & ATS & RAG & SCR & MCP & SUP --> FC[Finding Correlator]
+    FC --> APV[Attack Path Visualization]
+    APV --> TB[Test Builder]
+    TB --> REP[Report Agent]
+    REP --> OUT[(HTML / PDF report)]
+```
 
 ## MCP Policy
 
