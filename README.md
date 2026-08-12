@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="assets/banner-hades-blackwatch.png" alt="Hades Blackwatch" width="100%">
-</p>
 
 # Hades Blackwatch
 
